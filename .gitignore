@@ -1,8 +1,8 @@
 .Rproj.user
 .Rhistory
-.RData
-.Ruserdata
-.dta
+*.RData
+*.Ruserdata
+*.dta
 *.smcl
 *.sas7bdat
 *.xls
