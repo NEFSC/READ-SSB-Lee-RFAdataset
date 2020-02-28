@@ -33,6 +33,9 @@ pause on
 
 #delimit ;
 
+global user minyang;
+
+
 if strmatch("$user","minyang"){;
 global my_projdir "/home/mlee/Documents/Workspace/ownership";
 quietly do "/home/mlee/Documents/Workspace/technical folder/do file scraps/odbc_connection_macros.do";
