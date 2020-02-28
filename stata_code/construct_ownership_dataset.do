@@ -11,20 +11,17 @@
 4.  Join to the PLAN-CAT data from vps_fishery_ner 
 5.  Construct Affiliate level gross revenues, gross revenues by "category", and make a determination of "SMALL" and "LARGE".  Fill in zeros.
 6.  added "permits per affiliate_id"
-You might need some user-written commands to run this code, specifically "DSCONCAT"
+You might need some user-written commands to run this code
 
-I have put some citations from the CFR at the bottom of this file, in case you are particularly interested in that stuff.
-I've added some code to give an error message if I haven't updated the for-hire prices.
+You will also need access to some tables on sole
+permit.vps_owner, permit.bus_own, permit.vps_fishery_ner
+cfdbs.cfdersYYYY in the appropriate years
+sfclam.sfoqpr
+vtr.veslogYYYYt and vtr.veslogYYYYg
 
-V 1.9: PLAN_CAT from the most recent year was not properly joined to the revenue and affilation data for some permits.  
-	These would have been permits that fished for 1 or 2 out of the three years.  
-	For any years that were missing (total revenue=0), the PLAN_CAT values were filled with zeros. 
-	They should be filled with the PLAN_CAT values from the most recent permit year.
-
-V 1.8: Minor changes to deal with the unclassified shellfish category
-V 1.7: This now classifies as small or large based on NMFS new $11M size standard for commercial fishing
-	Added CPI adjustment for 2016
 */
+
+
 
 /* PRELIMINARIES */
 /* Set up folders and oracle connection*/
@@ -256,8 +253,8 @@ forvalues yr=$firstyr/$yr_select {;
 	clear;
 	tempfile new2;
 	local files2 `"`files2'"`new2'" "'  ;
-	odbc load,  exec("select sum(nvl(nanglers,0)) as anglers, permit from veslog`yr't where (tripcatg between 2 and 3) and tripid in (
-select distinct tripid from veslog`yr'g where gearcode='HND')
+	odbc load,  exec("select sum(nvl(nanglers,0)) as anglers, permit from vtr.veslog`yr't where (tripcatg between 2 and 3) and tripid in (
+select distinct tripid from vtr.veslog`yr'g where gearcode='HND')
 group by permit;") conn("$mysole_conn") lower;
 	gen value_permit_forhire=round(anglers*rec_exp`yr');
 	gen year=`yr';
