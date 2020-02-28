@@ -1,0 +1,9 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.dta
+data_folder/
+*.smcl
+*.sas7bdat
+
