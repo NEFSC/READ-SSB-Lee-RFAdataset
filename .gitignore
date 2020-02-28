@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 .dta
-data_folder/
 *.smcl
 *.sas7bdat
-
+*.xls
+*.xlsx
