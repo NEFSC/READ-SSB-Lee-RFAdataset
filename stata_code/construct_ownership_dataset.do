@@ -29,7 +29,7 @@ vtr.veslogYYYYt and vtr.veslogYYYYg
 clear
 version 15.1
 scalar drop _all
-pause on
+pause off
 
 #delimit ;
 
@@ -37,7 +37,7 @@ global user minyang;
 
 
 if strmatch("$user","minyang"){;
-global my_projdir "/home/mlee/Documents/Workspace/ownership";
+global my_projdir "/home/mlee/Documents/Workspace/ownership/RFAdataset";
 quietly do "/home/mlee/Documents/Workspace/technical folder/do file scraps/odbc_connection_macros.do";
 };
 
