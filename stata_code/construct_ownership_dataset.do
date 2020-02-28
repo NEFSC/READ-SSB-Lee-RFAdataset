@@ -24,15 +24,16 @@ V 1.9: PLAN_CAT from the most recent year was not properly joined to the revenue
 V 1.8: Minor changes to deal with the unclassified shellfish category
 V 1.7: This now classifies as small or large based on NMFS new $11M size standard for commercial fishing
 	Added CPI adjustment for 2016
-
-
 */
 
+/* PRELIMINARIES */
+/* Set up folders and oracle connection*/
 
 clear
-version 15
+version 15.1
 scalar drop _all
 pause on
+
 #delimit ;
 
 if strmatch("$user","minyang"){;
@@ -41,8 +42,10 @@ quietly do "/home/mlee/Documents/Workspace/technical folder/do file scraps/odbc_
 };
 
 if strmatch("$user","scott"){;
-
+/* Scott would put his preferred project directory here. 
+He would put the code needed to construct his odbc connection string here to */
 };
+
 global my_codedir "${my_projdir}/stata_code";
 global my_datadir "${my_projdir}/data_folder";
 
@@ -52,7 +55,8 @@ global my_datadir "${my_projdir}/data_folder";
 
 
 
-
+/* PRELIMINARIES */
+/* Take care of Years and deflating */
 /*These lines grab the ``correct year'', based on system date.
 $yr_select is used to construct affiliated entities */
 
@@ -81,14 +85,11 @@ scalar C2010=218.056;
 scalar C2011=224.939;
 scalar C2012=229.594;
 scalar C2013=232.957;
-
 scalar C2014=237.088;
 scalar C2015=237.739;
 scalar C2016=241.237;
 scalar C2017=246.163;
-
-scalar C2017=scalar(C2017);
-
+scalar C2018=252.125;
 
 scalar rec_exp2011=111;
 scalar rec_exp2010=round(rec_exp2011*C2010/C2011, .01);
@@ -98,9 +99,7 @@ scalar rec_exp2014=round(rec_exp2011*C2014/C2011, .01);
 scalar rec_exp2015=round(rec_exp2011*C2015/C2011, .01);
 scalar rec_exp2016=round(rec_exp2011*C2016/C2011, .01);
 scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
-
-scalar rec_exp2018=rec_exp2017;
-
+scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
 
 /* SBA size standards for-hire, finfish, and shellfish 
 Changes to reflect July 2014 changes 
@@ -172,9 +171,7 @@ rename ap_year year;
 rename vp_num permit;
 
 tempfile ownership;
-
 save `ownership', replace;
-
 
 display "check2";
 /***************************************************
@@ -376,6 +373,7 @@ assert `mytt'==0;
 
 /*Aggregate revenues to shellfish, finfish, commercial, and total levels 
 Shellfish are nespp3=700 to nespp3=806, plus nespp3=834*/
+/* distinguishing between finfish and shellfish isn't necessary anymore, but we'll leave it anyway */
 
 egen value_permit_shellfish=rowtotal(value700-value806);
 replace value_permit_shellfish=value_permit_shellfish+value834;
@@ -387,10 +385,7 @@ gen value_permit=value_permit_commercial+value_permit_forhire;
 bysort permit (year): replace affiliate_id=affiliate_id[_N] if affiliate_id==.;
 bysort permit (year): replace affiliate_id=affiliate_id[1] if affiliate_id==.;
 bysort permit (year): replace affiliate_id=affiliate_id[2] if affiliate_id==.;
-
 replace affiliate_id=permit if affiliate_id==.;
-
-
 assert affiliate_id~=.;
 
 
@@ -516,8 +511,7 @@ export excel using "${my_datadir}/affiliates_${yr_select}A.xlsx", firstrow(varia
 
 saveold "${my_datadir}/affiliates_${yr_select}A.dta", replace version(12);
 
-/* if youre system is aware of stat-transfer, this will automatically create sas and Rdata datasets 
-
+/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets 
 !st "${my_datadir}/affiliates_${yr_select}A.dta"  "${my_datadir}/affiliates_${yr_select}A.dta.sas7bdat";
 !st "${my_datadir}/affiliates_${yr_select}A.dta.dta"  "${my_datadir}/affiliates_${yr_select}A.dta.Rdata";
 */
