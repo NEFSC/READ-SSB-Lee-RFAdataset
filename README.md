@@ -5,7 +5,7 @@ Code to construct the RFA dataset.
 
 These data are assembled for analysis required by the Regulatory Flexibility Act.  Fishing vessels (permits) are linked together, an industry determination is made, and firms are classified as small or large based on SBA guidelines.  Per SBA guidelines, we use revenue data in a single year to make the industry determination. Per SBA guidelines, we use 3 year trailing average to make the “small” determination.  
 
-You should think carefully about using this dataset for other purposes
+You should think *very carefully* about using this dataset for other purposes.
 
 # Overview 
 We use permit and ownership data from ap_year **YYYY** to link together permits into firms.  We use permit holdings on **June 1, YYYY** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful is quickly determining the regulated entity.  We use dealer data from years **YYYY-3** through year **YYYY-1** to construct commercial revenues and VTR data combined with recreational survey data to construct for-hire revenues.   
@@ -14,7 +14,6 @@ Analysis required by the Regulatory Flexibility Act should use the Affiliate_id,
 
 
 # Warnings
-1. First ordered list item
 1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want total revenues, you should either:
     1. Select the distinct AFFILIATE_ID and YEAR entries and SUM the affiliate revenue columns, or 
     2. Sum the value_permit, value_permit_finfish, value_permit_shellfish and value_permit_forhire columns
@@ -22,6 +21,9 @@ Analysis required by the Regulatory Flexibility Act should use the Affiliate_id,
 2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.  Once a group of permits is affiliated together, revenues for the trailing 3 years are combined and aggregated.  For example, if permits 123 and 456 were affiliated in 2013 but not in 2011 or 2012, the average revenues for 123 and 456 across the 2011-20123 period are summed when making a SBA size determination.  This is consistent with current SBA guidance.
 
 3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2013, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2014.  This is probably fine for RFA purposes.
+
+# Examples
+Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
 
 # References
 
