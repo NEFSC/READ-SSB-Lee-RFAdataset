@@ -115,7 +115,8 @@ global sba_shellfish=5500000;
 /* This is the "new" size standard for Small Businesses that NMFS is proposing*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
-
+/*      84 FR 34261 changed the standard for for-hire.*/
+global sba_forhire=8000000;
 
 /***************************************************
 1.  Construct Affiliates
