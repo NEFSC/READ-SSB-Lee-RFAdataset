@@ -1,9 +1,11 @@
 # Overview
-In general, I'm trying to keep code, raw data, processed data, results, and images separate.  I have soft coded these directories; and only two files needs to be changed (the ones in project_logistics) to change the project directories and subdirectories.
+This repository holds code to assemble ownership data for RFAA analysis.
 
-Smaller bits of analysis that are related (or depend on previous) are collected together in a wrapper.
+Please see [here](https://github.com/minyanglee/RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
 
-# Cloning from Github and other setup
+# Getting started
+
+## Cloning from Github and other setup
 Min-Yang is using Rstudio to write .Rmd or .md documentation. He is also using Rstudio's git version control to commit/push/pull from github. It works reasonably well.  You will also need git installed.
 
 The easist thing to do is to clone this repository to a place on your computer. [Here's a starting guide](https://cfss.uchicago.edu/setup/git-with-rstudio/).  Don't put spaces in the name.  Cloning the repository will set up many, but not all of the folders.
