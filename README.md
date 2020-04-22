@@ -1,5 +1,5 @@
 # RFAdataset
-Code to construct the RFA dataset.
+This is a description of the data products that are produced by code in this repository.
 
 # Purpose
 
