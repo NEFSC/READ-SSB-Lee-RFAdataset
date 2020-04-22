@@ -1,5 +1,5 @@
 # Overview
-This repository holds code to assemble ownership data for RFAA analysis.
+This repository holds code to assemble ownership data for RFAA analysis.  This readme contains info about how to get and run the code. 
 
 Please see [here](https://github.com/minyanglee/RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
 
