@@ -1,6 +1,9 @@
 /* setup global macros for connecting to oracle sole or nova under windows and linux */
 /*Because there may be semicolons inside the connection string, you should use carriage returns as delimiters in this file*/
-
+/* Usage: Either 
+1. copy/paste parts of this into your profile.do file OR
+2. Run this file right before you need to extract data.
+*/
 version 15.1
 #delimit cr
 global myuid "your_uid"
