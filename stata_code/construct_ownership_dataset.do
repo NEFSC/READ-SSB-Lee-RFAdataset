@@ -33,18 +33,7 @@ pause off
 
 #delimit ;
 
-global user minyang;
 
-
-if strmatch("$user","minyang"){;
-global my_projdir "/home/mlee/Documents/Workspace/ownership/RFAdataset";
-quietly do "/home/mlee/Documents/Workspace/technical folder/do file scraps/odbc_connection_macros.do";
-};
-
-if strmatch("$user","scott"){;
-/* Scott would put his preferred project directory here. 
-He would put the code needed to construct his odbc connection string here to */
-};
 
 global my_codedir "${my_projdir}/stata_code";
 global my_datadir "${my_projdir}/data_folder";
@@ -134,7 +123,7 @@ clear;
 odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year 
 	from permit.vps_owner c, permit.bus_own b, permit.vps_fishery_ner a 
 		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner where ap_year=$yr_select group by vp_num)
-	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") conn("$mysole_conn") lower;
+	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn lower;
 
 
 display "check1";
@@ -190,7 +179,7 @@ forvalues yr=$firstyr/$yr_select {;
 	tempfile new;
 	local files `"`files'"`new'" "'  ;
 	odbc load,  exec("SELECT permit, year, nespp3, sum(nvl(sppvalue,0)) as value FROM `schema'`yr' 
-		group by permit, year, nespp3;") conn("$mysole_conn") lower;
+		group by permit, year, nespp3;")  $mysole_conn lower;
 	save `new';
 };
 clear;
@@ -220,7 +209,7 @@ save `myt1';
 
 clear;
 /* Extract the surfclam and ocean quahog data */
-odbc load,  exec("SELECT num as permit, bush as quantity, cat, price, pd from sfoqpr") conn("$mysole_conn") lower;
+odbc load,  exec("SELECT num as permit, bush as quantity, cat, price, pd from sfoqpr") $mysole_conn lower;
 gen str3 nespp3="754" if cat==6;
 replace nespp3="769" if cat==1;
 count if strmatch(nespp3," ");
@@ -259,7 +248,7 @@ forvalues yr=$firstyr/$yr_select {;
 	local files2 `"`files2'"`new2'" "'  ;
 	odbc load,  exec("select sum(nvl(nanglers,0)) as anglers, permit from vtr.veslog`yr't where (tripcatg between 2 and 3) and tripid in (
 select distinct tripid from vtr.veslog`yr'g where gearcode='HND')
-group by permit;") conn("$mysole_conn") lower;
+group by permit;") $mysole_conn lower;
 	gen value_permit_forhire=round(anglers*rec_exp`yr');
 	gen year=`yr';
 	save `new2';
@@ -306,7 +295,7 @@ clear;
 			(select max(ap_num) as ap_num from permit.vps_fishery_ner where
 		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
-		 ;") conn("$mysole_conn") lower;
+		 ;")  $mysole_conn lower;
 
 
 
