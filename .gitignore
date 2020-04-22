@@ -7,3 +7,5 @@
 *.sas7bdat
 *.xls
 *.xlsx
+README.html
+*.dta
