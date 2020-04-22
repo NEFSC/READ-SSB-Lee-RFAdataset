@@ -19,6 +19,8 @@ cfdbs.cfdersYYYY in the appropriate years
 sfclam.sfoqpr
 vtr.veslogYYYYt and vtr.veslogYYYYg
 
+This code is a little janky - it would have been smarter to consolidate the data extraction steps, the "cleanup/rehsaping steps", and the joining steps into distinct blocks. 
+
 */
 
 
@@ -168,7 +170,7 @@ display "check2";
 2a.  Landings and revenues from Last 3 years
 ***************************************************/
 global firstyr= $yr_select-2;
-local schema "cfders";
+local schema "cfdbs.cfders";
 
 
 /* Extraction loop 
