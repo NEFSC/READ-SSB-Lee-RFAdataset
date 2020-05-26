@@ -10,7 +10,6 @@ quietly do "/home/mlee/Documents/Workspace/technical folder/do file scraps/odbc_
 global oracle_cxn "conn("$mysole_conn") lower";
 };
 
-/*minyangWin is not setup to connect to oracle yet */
 if strmatch("$user","minyangWin"){;
 global my_projdir "C:\Users\Min-Yang.Lee\Documents\RFAdataset";
 quietly do "C:\Users\Min-Yang.Lee\Documents\common\odbc_setup_macros.do";
@@ -22,3 +21,4 @@ global oracle_cxn " $mysole_conn lower";
 global my_datadir "${my_projdir}\data_folder";
 
 
+global my_codedir "${my_projdir}\stata_code";

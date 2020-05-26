@@ -19,7 +19,7 @@ cfdbs.cfdersYYYY in the appropriate years
 sfclam.sfoqpr
 vtr.veslogYYYYt and vtr.veslogYYYYg
 
-This code is a little janky - it would have been smarter to consolidate the data extraction steps, the "cleanup/rehsaping steps", and the joining steps into distinct blocks. 
+This code is a little janky - it would have been smarter to consolidate the data extraction steps, the "cleanup/rehsaping steps", and the joining steps into distinct blocks (good) or sub-files (better). 
 
 */
 
@@ -37,8 +37,6 @@ pause off
 
 
 
-global my_codedir "${my_projdir}/stata_code";
-global my_datadir "${my_projdir}/data_folder";
 
 
 
@@ -67,6 +65,7 @@ else if $this_month<6{;
 
 };
 
+
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
  CPI Annual CUUR0000SA0 
@@ -81,6 +80,8 @@ scalar C2015=237.739;
 scalar C2016=241.237;
 scalar C2017=246.163;
 scalar C2018=252.125;
+scalar C2019=256.903;
+
 
 scalar rec_exp2011=111;
 scalar rec_exp2010=round(rec_exp2011*C2010/C2011, .01);
@@ -91,6 +92,7 @@ scalar rec_exp2015=round(rec_exp2011*C2015/C2011, .01);
 scalar rec_exp2016=round(rec_exp2011*C2016/C2011, .01);
 scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
 scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
+scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
 
 /* SBA size standards for-hire, finfish, and shellfish 
 Changes to reflect July 2014 changes 
@@ -106,7 +108,9 @@ global sba_shellfish=5500000;
 /* This is the "new" size standard for Small Businesses that NMFS is proposing*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
-/*      84 FR 34261 changed the standard for for-hire.*/
+/*      84 FR 34261 changed the standard for for-hire as of July 2019
+https://www.federalregister.gov/documents/2019/07/18/2019-14980/small-business-size-standards-adjustment-of-monetary-based-size-standards-for-inflation
+*/
 global sba_forhire=8000000;
 
 /***************************************************
