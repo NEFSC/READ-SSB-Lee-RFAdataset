@@ -500,6 +500,7 @@ foreach var of varlist BLU_1-TLF_2{;
 
 
 drop __*;
+compress;
 
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  BLU_1-TLF_2 using  "${my_datadir}/affiliates_condensed_${yr_select}A.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/affiliates_${yr_select}A.xlsx", firstrow(variables) replace;
