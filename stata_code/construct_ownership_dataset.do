@@ -38,6 +38,9 @@ pause off
 
 
 
+local date: display %td_CCYY_NN_DD date(c(current_date), "DMY");
+global today_date_string = subinstr(trim("`date'"), " " , "_", .);
+global vintage_string $today_date_string;
 
 
 
@@ -500,17 +503,18 @@ foreach var of varlist BLU_1-TLF_2{;
 
 
 drop __*;
+sort affiliate_id year;
 compress;
 
-export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  BLU_1-TLF_2 using  "${my_datadir}/affiliates_condensed_${yr_select}A.xlsx", firstrow(variables) replace;
-export excel using "${my_datadir}/affiliates_${yr_select}A.xlsx", firstrow(variables) replace;
+export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  BLU_1-TLF_2 using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
+export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
 
-saveold "${my_datadir}/affiliates_${yr_select}A.dta", replace version(12);
+saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets 
-!st "${my_datadir}/affiliates_${yr_select}A.dta"  "${my_datadir}/affiliates_${yr_select}A.dta.sas7bdat";
-!st "${my_datadir}/affiliates_${yr_select}A.dta.dta"  "${my_datadir}/affiliates_${yr_select}A.dta.Rdata";
+!st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
+!st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
 */
 
 

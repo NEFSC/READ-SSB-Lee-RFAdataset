@@ -7,16 +7,36 @@ These data are assembled for analysis required by the Regulatory Flexibility Act
 
 You should think *very carefully* about using this dataset for other purposes.
 
-# Overview 
-We use permit and ownership data from ap_year **YYYY** to link together permits into firms.  We use permit holdings on **June 1, YYYY** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful is quickly determining the regulated entity.  We use dealer data from years **YYYY-3** through year **YYYY-1** to construct commercial revenues and VTR data combined with recreational survey data to construct for-hire revenues.   
+# Filenames
+
+1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY-MM-DD.  This is provided in stata12, excel, csv, and sas7bdat formats.
+1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
+
+
+
+# Overview
+
+Each row contains an observation of a permit-year.  Permits are grouped together through common ownership; vessels with identical owners have the same affiliate_id.  There are three affiliate level columns: *affiliate_total*, *affiliate_fish*, and *affiliate_forhire* revenue.  These columns contain the aggregate revenue, commercial fishing revenue, and for-hire revenue for the firm.  The following table is an example:
+
+affiliate_id|	year|	count_permits|	entity_type_2019|	small_business |	permit|	affiliate_total|	affiliate_fish| value_permit
+|---|---|---|---|---|---|---|---| ---|
+1	|2017|	1|	FISHING|	1|	999999|	1675310|	1675310| 1675310
+1	|2018|	1|	FISHING|	1|	999999|	1625835|	1625835|1625835
+1	|2019|	1|	FISHING|	1|	999999|	1725104|	1725104|1725104
+2	| 2017|	2|	FISHING|	1|	111111|	**2830508**|	**2830508**|*1240510*
+2|	2017|	2|	FISHING|	1|	222222|	**2830508**|	**2830508**|*1589998*
+
+We use permit and ownership data from the current year (**ap_year= YYYY**) to link together permits into firms.  We use permit holdings on **June 1**  of the **current year** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful is quickly determining the regulated entity.  We use dealer plus clam processor report data from years **YYYY-3** through year **YYYY-1** to construct commercial revenues.  VTR data combined with recreational survey data are used to construct for-hire revenues.
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
 
+
+
 # Warnings
 1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want total revenues, you should either:
-    1. Select the distinct AFFILIATE_ID and YEAR entries and SUM the affiliate revenue columns, or 
-    2. Sum the value_permit, value_permit_finfish, value_permit_shellfish and value_permit_forhire columns
+    1. Retain only the distinct AFFILIATE_ID and YEAR entries and SUM the affiliate revenue columns, or 
+    2. Sum the value_permit, value_permit_forhire, or valueSSS columns
 
 2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.  Once a group of permits is affiliated together, revenues for the trailing 3 years are combined and aggregated.  For example, if permits 123 and 456 were affiliated in 2013 but not in 2011 or 2012, the average revenues for 123 and 456 across the 2011-20123 period are summed when making a SBA size determination.  This is consistent with current SBA guidance.
 
