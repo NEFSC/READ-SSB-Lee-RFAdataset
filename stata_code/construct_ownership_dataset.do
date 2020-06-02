@@ -6,9 +6,9 @@
 2.  Revenues:
 	a. Pull out landings from CFDBS  from the last 3 years.
 	b. Get SCOQ revenues from a SCOQ
-	c.  Compute the for-hire revenue based on VESLOG 
+	c.  Compute the for-hire revenue based on VESLOG
 3. Join revenues data to affiliates (ownership data).
-4.  Join to the PLAN-CAT data from vps_fishery_ner 
+4.  Join to the PLAN-CAT data from vps_fishery_ner
 5.  Construct Affiliate level gross revenues, gross revenues by "category", and make a determination of "SMALL" and "LARGE".  Fill in zeros.
 6.  added "permits per affiliate_id"
 You might need some user-written commands to run this code
@@ -19,7 +19,7 @@ cfdbs.cfdersYYYY in the appropriate years
 sfclam.sfoqpr
 vtr.veslogYYYYt and vtr.veslogYYYYg
 
-This code is a little janky - it would have been smarter to consolidate the data extraction steps, the "cleanup/rehsaping steps", and the joining steps into distinct blocks (good) or sub-files (better). 
+This code is a little janky - it would have been smarter to consolidate the data extraction steps, the "cleanup/rehsaping steps", and the joining steps into distinct blocks (good) or sub-files (better).
 
 */
 
@@ -36,17 +36,6 @@ pause off
 #delimit ;
 
 
-
-
-local date: display %td_CCYY_NN_DD date(c(current_date), "DMY");
-global today_date_string = subinstr(trim("`date'"), " " , "_", .);
-global vintage_string $today_date_string;
-
-
-
-
-
-
 /* PRELIMINARIES */
 /* Take care of Years and deflating */
 /*These lines grab the ``correct year'', based on system date.
@@ -61,7 +50,7 @@ if $this_month>=6{;
 	global yr_select=$this_year-1;
 	global yr_permit_portfolio=$this_year;
 	};
-	
+
 else if $this_month<6{;
 	global yr_select=$this_year-2;
 	global yr_permit_portfolio=$this_year-1;
@@ -71,7 +60,7 @@ else if $this_month<6{;
 
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
- CPI Annual CUUR0000SA0 
+ CPI Annual CUUR0000SA0
 
 */
 scalar C2010=218.056;
@@ -97,8 +86,8 @@ scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
 scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
 scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
 
-/* SBA size standards for-hire, finfish, and shellfish 
-Changes to reflect July 2014 changes 
+/* SBA size standards for-hire, finfish, and shellfish
+Changes to reflect July 2014 changes
 global sba_forhire=7000000;
 global sba_finfish=19000000;
 global sba_shellfish=5000000;
@@ -120,29 +109,29 @@ global sba_forhire=8000000;
 1.  Construct Affiliates
 ***************************************************/
 /* Port of chad's sas code to get ownership data.*/
-/* Objective: Construct a key-file which contains VP_NUM, Affiliate_id, and ap_year.  
+/* Objective: Construct a key-file which contains VP_NUM, Affiliate_id, and ap_year.
 The Affiliation variable is "constant" for all VP_NUMS which have the exact same person_id's associated with it.
 Note: The affiliate_id number that is associated with an entity may change when this code is re-run and data are extracted again.  Caveat emptor.
-Note2: There are some VP_NUM's that have revenue but no ownership information. These VP_NUMS are assigned an affiliate_id number in step 3. 
+Note2: There are some VP_NUM's that have revenue but no ownership information. These VP_NUMS are assigned an affiliate_id number in step 3.
 */
 
 /* Min-Yang's comment: This code is slightly modified from Chad's SQL code.  It joins data from three tables (vps_owner, vps_fisher_ner, and business_owner)*/
 
 clear;
-odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year 
-	from permit.vps_owner c, permit.bus_own b, permit.vps_fishery_ner a 
+odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year
+	from permit.vps_owner c, permit.bus_own b, permit.vps_fishery_ner a
 		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner where ap_year=$yr_select group by vp_num)
-	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn lower;
+	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn;
 
 
 display "check1";
-/* get rid of business_id -- they aren't necessary to what we are doing.  
+/* get rid of business_id -- they aren't necessary to what we are doing.
 ML: I think business_id could have been omitted from the SQL select code*/
 drop business_id;
- 
+
 
 /* important to use bysort vp_num ap_year (person_id) to consistently order the person-id's within the groups defined by vp_num and ap_year*/
-/* this just generates a numeric 'suffix' for the person_id variable.  For a given VP_NUM and YEAR, the lowest person_id has the lowest jid.  
+/* this just generates a numeric 'suffix' for the person_id variable.  For a given VP_NUM and YEAR, the lowest person_id has the lowest jid.
 This is not important for now, but will be used in the next step when arraying person ids.*/
 bysort vp_num ap_year (person_id ): gen jid=_n;
 
@@ -180,15 +169,15 @@ global firstyr= $yr_select-2;
 local schema "cfdbs.cfders";
 
 
-/* Extraction loop 
-Loop over 3 years of CFDERS, extracting vessel level revenues by NESPP3.  Cast <null> sppvalues to 0.  
+/* Extraction loop
+Loop over 3 years of CFDERS, extracting vessel level revenues by NESPP3.  Cast <null> sppvalues to 0.
 Smash them into a single dataset.  */
 forvalues yr=$firstyr/$yr_select {;
 	clear;
 	tempfile new;
 	local files `"`files'"`new'" "'  ;
-	odbc load,  exec("SELECT permit, year, nespp3, sum(nvl(sppvalue,0)) as value FROM `schema'`yr' 
-		group by permit, year, nespp3;")  $mysole_conn lower;
+	odbc load,  exec("SELECT permit, year, nespp3, sum(nvl(sppvalue,0)) as value FROM `schema'`yr'
+		group by permit, year, nespp3;")  $mysole_conn;
 	save `new';
 };
 clear;
@@ -218,7 +207,7 @@ save `myt1';
 
 clear;
 /* Extract the surfclam and ocean quahog data */
-odbc load,  exec("SELECT num as permit, bush as quantity, cat, price, pd from sfoqpr") $mysole_conn lower;
+odbc load,  exec("SELECT num as permit, bush as quantity, cat, price, pd from sfoqpr") $mysole_conn;
 gen str3 nespp3="754" if cat==6;
 replace nespp3="769" if cat==1;
 count if strmatch(nespp3," ");
@@ -240,13 +229,13 @@ reshape wide value, i(permit year) j(nespp3) string;
 save `myt1', replace;
 
 /***************************************************
-2c.  Compute the for-hire revenue based on VESLOG 
+2c.  Compute the for-hire revenue based on VESLOG
 Party and Charter only trips from VESLOGYYYYT
 Handline only gear from VESLOGYYYYG
-This code is loosely based on Scott's SAS code and barb's custom rec dataset 
+This code is loosely based on Scott's SAS code and barb's custom rec dataset
 
-Select the sum of anglers at the permit-year level corresponding to party and charter trips that used HND Gear. 
-Multiply anglers by expenditure per angler to get vessel level revenue. 
+Select the sum of anglers at the permit-year level corresponding to party and charter trips that used HND Gear.
+Multiply anglers by expenditure per angler to get vessel level revenue.
 Join back into the revenue dataset.
 ****************************************/
 
@@ -257,7 +246,7 @@ forvalues yr=$firstyr/$yr_select {;
 	local files2 `"`files2'"`new2'" "'  ;
 	odbc load,  exec("select sum(nvl(nanglers,0)) as anglers, permit from vtr.veslog`yr't where (tripcatg between 2 and 3) and tripid in (
 select distinct tripid from vtr.veslog`yr'g where gearcode='HND')
-group by permit;") $mysole_conn lower;
+group by permit;") $mysole_conn;
 	gen value_permit_forhire=round(anglers*rec_exp`yr');
 	gen year=`yr';
 	save `new2';
@@ -282,7 +271,7 @@ save `myt1', replace;
 /*3. Join revenues data to affiliates (ownership data). */
 merge m:1 permit using `ownership';
 
-/* 
+/*
 _merge==1 there are no owner_ids. We need to create a distinct affiliation id for each of these.  I will use the permit number.
 _merge==2 there were no landings.  Need to tsset, then fill  so that value==0.  We'll do this at Checkpoint 100
 _merge==3. There is a match between affiliation and revenue dataset.  Nothing to do.
@@ -299,12 +288,12 @@ save `myt1', replace;
 
 #delimit;
 clear;
-	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner  
-		where ap_num in 
+	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner
+		where ap_num in
 			(select max(ap_num) as ap_num from permit.vps_fishery_ner where
 		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
-		 ;")  $mysole_conn lower;
+		 ;")  $mysole_conn;
 
 
 
@@ -329,7 +318,7 @@ use `myt1', clear;
 merge m:1 permit year using `perms';
 /*This join is messy. All permit-years in the CFDBS-ownership data that do not a particular type of Federal permit (_merge=1).
 	These can be filled in with 0's
-	
+
 
  There are also federal permits with no revenues (_merge=2).
 
@@ -344,8 +333,8 @@ drop _merge;
 
 
 
-/* Checkpoint 100: Deal with permits that only show up once 
-	These are a special kind of awful, because they would have 1-2 years of revenue but no permits in the most recent year. 
+/* Checkpoint 100: Deal with permits that only show up once
+	These are a special kind of awful, because they would have 1-2 years of revenue but no permits in the most recent year.
 	If they had a permit in the most recent year, they'd have matched to the permit data*/
 tsset permit year;
 tsfill, full;
@@ -370,7 +359,7 @@ assert `mytt'==0;
 
 
 
-/*Aggregate revenues to shellfish, finfish, commercial, and total levels 
+/*Aggregate revenues to shellfish, finfish, commercial, and total levels
 Shellfish are nespp3=700 to nespp3=806, plus nespp3=834*/
 /* distinguishing between finfish and shellfish isn't necessary anymore, but we'll leave it anyway */
 
@@ -392,8 +381,8 @@ order affiliate_id permit year value_permit value_permit_finfish value_permit_sh
 sort affiliate_id permit year;
 quietly compress;
 
-/*construct affililate level revenues 
-NOTE: For affiliate_ids with 1 permit every year, the "affiliate" variables are identical to the "value_permit" variables.  
+/*construct affililate level revenues
+NOTE: For affiliate_ids with 1 permit every year, the "affiliate" variables are identical to the "value_permit" variables.
 For affiliate_ids with more than 1 permit in a year, there are "multiple" duplicated entries for the "affiliate" variables.
 */
 
@@ -423,7 +412,7 @@ bysort affiliate_id (year): replace entity_type_$yr_select=entity_type_$yr_selec
 /*ensure all entities are classified*/
 assert strmatch(entity_type_$yr_select,"")==0;
 
-/* classify affiliate_id as small or large based on 3-year average of TOTAL revenues and the appropriate size standard. 
+/* classify affiliate_id as small or large based on 3-year average of TOTAL revenues and the appropriate size standard.
 */
 bysort affiliate_id: egen affiliate_bar=sum(value_permit);
 replace affiliate_bar=affiliate_bar/3;
@@ -450,7 +439,7 @@ assert check==0;
 drop check;
 drop affiliate_bar;
 
-/* logic check: did you update the prices/expenditures of for hire fishing  
+/* logic check: did you update the prices/expenditures of for hire fishing
 These asserts will "break" if the mean of affiliate_forhire is zero, if it is "missing", if there are no entries.
 This might happen if there is either a zero price or missing price for for-hire
 */
@@ -460,7 +449,7 @@ scalar NN=r(N);
 scalar pp=r(mean);
 assert scalar(pp)~=0;
 assert scalar(pp)~=.;
-assert scalar(NN)~=.; 
+assert scalar(NN)~=.;
 assert scalar(NN)~=0;
 
 
@@ -512,7 +501,7 @@ export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(v
 
 saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
 
-/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets 
+/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
 !st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
 !st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
 */
