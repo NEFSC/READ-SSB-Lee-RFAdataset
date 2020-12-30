@@ -77,4 +77,9 @@ A pair of small do files to set up folders and then make stata aware of folders.
 ### sample
 Sample code for a profile.do, odbc setup, and how to use the output data.
 
+# Distribution
 
+Min-Yang has a email distribution list:
+1. NEFSC SSB
+1. MAFMC staff
+1. NEFMC staff
