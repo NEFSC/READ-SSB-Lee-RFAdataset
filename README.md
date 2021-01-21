@@ -101,4 +101,4 @@ Min-Yang has a email distribution list:
 1. who maintains and contributes to the project. Min-Yang
 
 # License file
-See here for the license file
+See here for the [license file] (https://github.com/minyanglee/RFAdataset/blob/master/license.md)
