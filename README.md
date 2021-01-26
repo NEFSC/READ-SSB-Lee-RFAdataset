@@ -1,9 +1,8 @@
 # Overview
-This repository can be found at https://github.com/minyanglee/RFAdataset/
-
+This repository can be found at https://github.com/NEFSC/READ-SSB-Lee-RFAdataset
 This repository holds code to assemble ownership data for RFAA analysis.  This readme contains info about how to get and run the code. 
 
-Please see [here](https://github.com/minyanglee/RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
+Please see [here](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
 
 # Getting started
 Please see [here](https://github.com/NEFSC/READ-SSB-Lee-project-templates) 
