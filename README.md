@@ -6,6 +6,8 @@ This repository holds code to assemble ownership data for RFAA analysis.  This r
 Please see [here](https://github.com/minyanglee/RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
 
 # Getting started
+Please see [here](https://github.com/NEFSC/READ-SSB-Lee-project-templates) 
+
 
 ## Cloning from Github and other setup
 Min-Yang is using Rstudio to write .Rmd or .md documentation. He is also using Rstudio's git version control to commit/push/pull from github. It works reasonably well.  You will also need to install git.
