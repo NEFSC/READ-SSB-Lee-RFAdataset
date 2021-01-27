@@ -17,7 +17,7 @@ Min-Yang has a email distribution list
 
 
 1. who worked on this project:  Min-Yang
-1. when this project was created: Jan, 2021 
+1. when this project was created: 2013. But put on Github in 2020 and moved to NEFSC in January 2021. 
 1. what the project does: Assembles data for RFA analysis. 
 1. why the project is useful:  Assembles data for RFA analysis 
 1. how users can get started with the project: Download and follow the readme
