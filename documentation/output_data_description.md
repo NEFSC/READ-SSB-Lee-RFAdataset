@@ -7,6 +7,14 @@ These data are assembled for analysis required by the Regulatory Flexibility Act
 
 You should think *very carefully* about using this dataset for other purposes.
 
+# Updates
+
+We run this code to provide data once a year, just after June 1st.  If critical bugs are found, we will fix and update.
+
+# Data storage
+Social Science Branch staff can find on the socialsci share drive at : /RFA_EO12866 Guidelines/ownership_data/.  There, you will find current data, archived data, and background information.
+
+
 # Filenames
 
 1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY-MM-DD.  This is provided in stata12, excel, csv, and sas7bdat formats.
