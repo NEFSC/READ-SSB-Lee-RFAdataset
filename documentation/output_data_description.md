@@ -58,8 +58,11 @@ Please see the subfolder in "stata_code" for a few stata code samples.  You're o
 ## CFR Title 13, Part 121
 
 §121.103   How does SBA determine affiliation?
-(a) General Principles of Affiliation. (1) Concerns and entities are affiliates of each other when one controls or has the power to control the other, or a third party or parties controls 
-	or has the power to control both. It does not matter whether control is exercised, so long as the power to control exists.
+
+(a) General Principles of Affiliation. 
+
+(1) Concerns and entities are affiliates of each other when one controls or has the power to control the other, or a third party or parties controls or has the power to control both. It does not matter whether control is exercised, so long as the power to control exists.
+
 (2) SBA considers factors such as ownership, management, previous relationships with or ties to another concern, and contractual relationships, in determining whether affiliation exists.
 
 (3) Control may be affirmative or negative. Negative control includes, but is not limited to, instances where a minority shareholder has the ability, under the concern's charter, by-laws, 
@@ -75,17 +78,19 @@ Please see the subfolder in "stata_code" for a few stata code samples.  You're o
 (e) Affiliation based on common management. Affiliation arises where one or more officers, directors, managing members, or partners who control the board of directors and/or management
 	of one concern also control the board of directors or management of one or more other concerns.
 
-(f) Affiliation based on identity of interest. Affiliation may arise among two or more persons with an identity of interest. Individuals or firms that have identical or substantially 
-	identical business or economic interests (such as family members, individuals or firms with common investments, or firms that are economically dependent through contractual
-	or other relationships) may be treated as one party with such interests aggregated. Where SBA determines that such interests should be aggregated, an individual or firm may
-	rebut that determination with evidence showing that the interests deemed to be one are in fact separate.
+(f) Affiliation based on identity of interest. Affiliation may arise among two or more persons with an identity of interest. Individuals or firms that have identical or substantially identical business or economic interests (such as family members, individuals or firms with common investments, or firms that are economically dependent through contractual or other relationships) may be treated as one party with such interests aggregated. Where SBA determines that such interests should be aggregated, an individual or firm may rebut that determination with evidence showing that the interests deemed to be one are in fact separate.
 
 §121.104   How does SBA calculate annual receipts?
-(c) Period of measurement. (1) Annual receipts of a concern that has been in business for three or more completed fiscal years means the **total receipts of the concern over its most recently completed three fiscal years divided by three**.
+
+(c) Period of measurement.
+
+(1) Annual receipts of a concern that has been in business for three or more completed fiscal years means the **total receipts of the concern over its most recently completed three fiscal years divided by three**.
+
 (d) Annual receipts of affiliates. 
-	(1) The average annual receipts size of a business concern with affiliates is calculated by adding the  average annual receipts of the business concern with the average annual receipts of each affiliate.
-	(2) If a concern has acquired an affiliate or been acquired as an affiliate during the applicable period of measurement or before the date on which it self-certified as small, the annual receipts used in determining size status includes the receipts of the acquired or acquiring concern. Furthermore, **this aggregation applies for the entire period 
-	of measurement**, not just the period after the affiliation arose.
+
+(1) The average annual receipts size of a business concern with affiliates is calculated by adding the  average annual receipts of the business concern with the average annual receipts of each affiliate.
+
+(2) If a concern has acquired an affiliate or been acquired as an affiliate during the applicable period of measurement or before the date on which it self-certified as small, the annual receipts used in determining size status includes the receipts of the acquired or acquiring concern. Furthermore, **this aggregation applies for the entire period of measurement**, not just the period after the affiliation arose.
 
 
 §121.107   How does SBA determine a concern's "primary industry"?
