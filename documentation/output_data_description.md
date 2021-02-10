@@ -99,4 +99,6 @@ In determining the primary industry in which a concern or a concern combined wit
 
 ## NMFS small business size standards
 
-NMFS has it's own size standards for commercial fishing.  As of August 19, 2019 the for-hire standard is $8M. The commerical fishing size standard is $11M.
+NMFS has it's own [size standards](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/2015-32564.pdf) for commercial fishing.  The commerical fishing size standard is $11M.
+
+For other industries related to the marine economy, see the SBA's [size standards] (https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/2019-14980.pdf).  As of August 19, 2019 the for-hire (NAICS 487210) standard is $8M. 
