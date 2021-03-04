@@ -2,8 +2,16 @@
 This repository can be found at https://github.com/NEFSC/READ-SSB-Lee-RFAdataset
 This repository holds code to assemble ownership data for RFAA analysis.  
 Please see [here](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/output_data_description.md) for documentation on the dataset
+
 Please see [here](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/getting_started.md) for help on running this code.
+
 Please see [here](https://github.com/NEFSC/READ-SSB-Lee-project-templates) for some general info on getting data from oracle and getting organized.
+
+Please help make this a valuable up-to-date resource.  To add your knowledge:
+1.   [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) - It's in the top right of github.
+1.   Make your changes  - click the file you want to edit and then the little pencil on the right side.  ![Here's a picture](/figures/fork_edit.jpg)
+1.   [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) so the changes get into the document.
+
 
 # Distribution
 Min-Yang has a email distribution list
