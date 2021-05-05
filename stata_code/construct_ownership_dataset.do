@@ -88,6 +88,25 @@ scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
 scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
 scalar rec_exp2020=round(rec_exp2011*C2020/C2011, .01);
 
+
+/* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
+
+
+scalar rec_exp2010 = 103.56
+scalar rec_exp2011 = 113.44
+scalar rec_exp2012 = 116.15
+scalar rec_exp2013 = 118.86
+scalar rec_exp2014 = 121.57
+scalar rec_exp2015 = 124.28
+scalar rec_exp2016 = 126.99
+scalar rec_exp2017 = 129.69
+scalar rec_exp2018 = 132.40
+scalar rec_exp2019 = 135.11
+/* nothing for 2020 yet, so just adjust the 2019 by CPI */
+scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
+
+
+
 /* SBA size standards for-hire, finfish, and shellfish
 Changes to reflect July 2014 changes
 global sba_forhire=7000000;
