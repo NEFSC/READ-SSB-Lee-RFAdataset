@@ -61,7 +61,7 @@ else if $this_month<6{;
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
  CPI Annual CUUR0000SA0
-
+Looks like I'm using the HALF2 numbers since at least 2014.
 */
 scalar C2010=218.056;
 scalar C2011=224.939;
@@ -73,6 +73,7 @@ scalar C2016=241.237;
 scalar C2017=246.163;
 scalar C2018=252.125;
 scalar C2019=256.903;
+scalar C2020=260.065;
 
 
 scalar rec_exp2011=111;
@@ -85,6 +86,7 @@ scalar rec_exp2016=round(rec_exp2011*C2016/C2011, .01);
 scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
 scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
 scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
+scalar rec_exp2020=round(rec_exp2011*C2020/C2011, .01);
 
 /* SBA size standards for-hire, finfish, and shellfish
 Changes to reflect July 2014 changes
