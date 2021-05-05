@@ -3,7 +3,7 @@ This is a description of the data products that are produced by code in this rep
 
 # Purpose
 
-These data are assembled for analysis required by the Regulatory Flexibility Act.  Fishing vessels (permits) are linked together, an industry determination is made, and firms are classified as small or large based on SBA guidelines.  Per SBA guidelines, we use revenue data in a single year to make the industry determination. Per SBA guidelines, we use 3 year trailing average to make the “small” determination.  
+These data are assembled for analysis required by the Regulatory Flexibility Act.  Fishing vessels (permits) are linked together, an industry determination is made, and firms are classified as small or large based on SBA guidelines.  Per SBA guidelines, we use revenue data in a single year to make the industry determination. Per SBA guidelines, we use 3 year trailing average to make the "small"" determination.  
 
 You should think *very carefully* about using this dataset for other purposes.
 

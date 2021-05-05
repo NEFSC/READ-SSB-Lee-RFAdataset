@@ -12,3 +12,5 @@ README.html
 *.csv
 *.html
 *.zip
+!For-Hire_Fee.xlsx
+!ForHire_methods.docx
