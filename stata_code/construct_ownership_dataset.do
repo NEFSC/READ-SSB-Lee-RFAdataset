@@ -34,6 +34,7 @@ scalar drop _all
 pause off
 
 #delimit ;
+global stat_transfer "C:\Program Files\StatTransfer15-64\st";
 
 
 /* PRELIMINARIES */
@@ -75,7 +76,7 @@ scalar C2018=252.125;
 scalar C2019=256.903;
 scalar C2020=260.065;
 
-
+/*
 scalar rec_exp2011=111;
 scalar rec_exp2010=round(rec_exp2011*C2010/C2011, .01);
 scalar rec_exp2012=round(rec_exp2011*C2012/C2011, .01);
@@ -87,21 +88,21 @@ scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
 scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
 scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
 scalar rec_exp2020=round(rec_exp2011*C2020/C2011, .01);
-
+*/
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 
 
-scalar rec_exp2010 = 103.56
-scalar rec_exp2011 = 113.44
-scalar rec_exp2012 = 116.15
-scalar rec_exp2013 = 118.86
-scalar rec_exp2014 = 121.57
-scalar rec_exp2015 = 124.28
-scalar rec_exp2016 = 126.99
-scalar rec_exp2017 = 129.69
-scalar rec_exp2018 = 132.40
-scalar rec_exp2019 = 135.11
+scalar rec_exp2010 = 103.56;
+scalar rec_exp2011 = 113.44;
+scalar rec_exp2012 = 116.15;
+scalar rec_exp2013 = 118.86;
+scalar rec_exp2014 = 121.57;
+scalar rec_exp2015 = 124.28;
+scalar rec_exp2016 = 126.99;
+scalar rec_exp2017 = 129.69;
+scalar rec_exp2018 = 132.40;
+scalar rec_exp2019 = 135.11;
 /* nothing for 2020 yet, so just adjust the 2019 by CPI */
 scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
 
@@ -118,7 +119,7 @@ global sba_forhire=7500000;
 global sba_finfish=20500000;
 global sba_shellfish=5500000;
 */
-/* This is the "new" size standard for Small Businesses that NMFS is proposing*/
+/* This is the "new" size standard for Small Businesses that NMFS*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
 /*      84 FR 34261 changed the standard for for-hire as of July 2019
@@ -257,7 +258,8 @@ This code is loosely based on Scott's SAS code and barb's custom rec dataset
 
 Select the sum of anglers at the permit-year level corresponding to party and charter trips that used HND Gear.
 Multiply anglers by expenditure per angler to get vessel level revenue.
-Join back into the revenue dataset.
+Merge into the revenue dataset.
+A vessel may have revenue from both commerical sources and for-hire trips.
 ****************************************/
 
 display "check4";
@@ -321,6 +323,8 @@ clear;
 
 gen str6 plancat=plan+"_"+cat;
 drop plan cat;
+/* there's a few 'duplicated' entries */
+duplicates drop;
 gen ppp=1;
 reshape wide ppp, i(vp) j(plancat) string;
 rename vp_num permit;
@@ -523,8 +527,10 @@ export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(v
 saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
-!st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
-!st "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
+
+
+! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
+! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
 */
 
 
