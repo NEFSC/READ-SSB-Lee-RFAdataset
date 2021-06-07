@@ -17,7 +17,7 @@ Social Science Branch staff can find on the socialsci share drive at : /RFA_EO12
 
 # Filenames
 
-1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY-MM-DD.  This is provided in stata12, excel, csv, and sas7bdat formats.
+1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY-MM-DD.  This is provided in stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
 
 
