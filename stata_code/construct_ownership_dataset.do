@@ -32,9 +32,10 @@ clear
 version 15.1
 scalar drop _all
 pause off
+pause on
 
 #delimit ;
-global stat_transfer "C:\Program Files\StatTransfer15-64\st";
+global stat_transfer "C:/Program Files/StatTransfer15-64/st.exe";
 
 
 /* PRELIMINARIES */
@@ -322,6 +323,9 @@ clear;
 
 
 gen str6 plancat=plan+"_"+cat;
+pause;
+/* store the distinct plan_cat for usage later */
+levelsof plancat, local(myplans) clean;
 drop plan cat;
 /* there's a few 'duplicated' entries */
 duplicates drop;
@@ -502,7 +506,8 @@ bysort affiliate_id (count_permits): gen diff=count_permits[1] !=count_permits[_
 assert diff==0;
 drop diff;
 
-foreach var of varlist BLU_1-TLF_2{;
+
+foreach var of varlist `myplans' {;
 	bysort permit: egen problem_`var'=sd(`var');
 	qui summ problem_`var';
 		if r(mean)==0{;
@@ -520,18 +525,19 @@ drop __*;
 sort affiliate_id year;
 compress;
 
-export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  BLU_1-TLF_2 using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
+/* this is a little dangerous on the permit categories, since TLF_3 may not always be the last one. And yet...changing this to * notation might work */
+export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
 
 saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
-
+*/
 
 ! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
 ! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
-*/
+
 
 
 
