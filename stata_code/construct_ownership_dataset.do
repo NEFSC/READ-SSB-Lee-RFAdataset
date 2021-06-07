@@ -32,7 +32,6 @@ clear
 version 15.1
 scalar drop _all
 pause off
-pause on
 
 #delimit ;
 global stat_transfer "C:/Program Files/StatTransfer15-64/st.exe";
@@ -525,7 +524,6 @@ drop __*;
 sort affiliate_id year;
 compress;
 
-/* this is a little dangerous on the permit categories, since TLF_3 may not always be the last one. And yet...changing this to * notation might work */
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
