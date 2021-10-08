@@ -5,10 +5,8 @@ Please see [here](/documentation/output_documentation/output_data_description.md
 
 Please see [here](https://github.com/NEFSC/READ-SSB-Lee-project-template-instructions) for some info if you want to try to run this yourself.
 
-Please help make this a valuable up-to-date resource.  To add your knowledge:
-1.   [Fork](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) - It's in the top right of github.
-1.   Make your changes  - click the file you want to edit and then the little pencil on the right side.  ![Here's a picture](/figures/fork_edit.jpg)
-1.   [Pull Request](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request-from-a-fork) so the changes get into the document.
+Please help make this a valuable up-to-date resource.  Look [here](https://github.com/NEFSC/READ-SSB-Lee-WorkingEfficiently), if you'd like to contribute. 
+
 
 
 # Distribution
