@@ -3,18 +3,13 @@ version 15.1
 #delimit ;
 
 
-/*
-global user minyang;
-or 
-global user minyangWin;
-*/
+/*Set "my_projdir" to the location where you have cloned the dataset.*/
 
 if strmatch("$user","minyang"){;
 global my_projdir "/home/mlee/Documents/projects/RFAdataset";
 };
 if strmatch("$user","minyangWin"){;
 global my_projdir "C:/Users/Min-Yang.Lee/Documents/RFAdataset";
-
 };
 
 global my_codedir "${my_projdir}/stata_code";
