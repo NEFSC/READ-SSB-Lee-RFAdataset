@@ -14,7 +14,7 @@
 You might need some user-written commands to run this code
 
 You will also need access to some tables on sole
-permit.vps_owner, permit.bus_own, permit.vps_fishery_ner
+permit.vps_owner, client.bus_own@garfo_nefsc, permit.vps_fishery_ner
 cfdbs.cfdersYYYY in the appropriate years
 sfclam.sfoqpr
 vtr.veslogYYYYt and vtr.veslogYYYYg
@@ -141,7 +141,7 @@ Note2: There are some VP_NUM's that have revenue but no ownership information. T
 
 clear;
 odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year
-	from permit.vps_owner c, permit.bus_own b, permit.vps_fishery_ner a
+	from permit.vps_owner c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner a
 		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner where ap_year=$yr_select group by vp_num)
 	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn;
 
@@ -165,6 +165,9 @@ sort person_id*;
 /* Generate affiliate_id variable: Observations which have the same value for affiliate_id have the same distinch pattern of person_ids.
 egen group() constructs a new variable taking on values 1,2,3,...., for each distinct combination of the person_id variables. The missing option allows for a missing value to be matched.  */
 
+/* there are a few firms with nested ownership. This doesn't propagate down.  I can't do much with this, except fill something in.*/
+/* for now, I'm going to take "99+permit number" for those*/
+replace person_id1=99000000+vp_num if person_id1==.;
 assert person_id1<.;
 egen affiliate_id=group(person_id*), missing;
 order affiliate_id ap_year vp_num;
