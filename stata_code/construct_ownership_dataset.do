@@ -57,11 +57,11 @@ else if $this_month<6{;
 	global yr_permit_portfolio=$this_year-1;
 
 };
-
-
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
- CPI Annual CUUR0000SA0
+ CPI-U  CUUR0000SA0
+ https://data.bls.gov/timeseries/CUUR0000SA0
+ No idea why I'm using -U 
 Looks like I'm using the HALF2 numbers since at least 2014.
 */
 scalar C2010=218.056;
@@ -75,6 +75,8 @@ scalar C2017=246.163;
 scalar C2018=252.125;
 scalar C2019=256.903;
 scalar C2020=260.065;
+scalar C2021=275.703;
+
 
 /*
 scalar rec_exp2011=111;
@@ -105,7 +107,7 @@ scalar rec_exp2018 = 132.40;
 scalar rec_exp2019 = 135.11;
 /* nothing for 2020 yet, so just adjust the 2019 by CPI */
 scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
-
+scalar rec_exp2021=round(rec_exp2019*C2021/C2019, .01);
 
 
 /* SBA size standards for-hire, finfish, and shellfish
