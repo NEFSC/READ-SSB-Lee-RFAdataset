@@ -50,6 +50,7 @@ Analysis required by the Regulatory Flexibility Act should use the Affiliate_id,
 
 3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2013, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2014.  This is probably fine for RFA purposes.
 
+4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
 
