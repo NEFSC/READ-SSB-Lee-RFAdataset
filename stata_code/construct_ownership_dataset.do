@@ -526,7 +526,7 @@ foreach var of varlist `myplans' {;
 
 
 drop __*;
-sort affiliate_id year;
+sort affiliate_id year permit ;
 compress;
 
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
@@ -538,8 +538,8 @@ saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
 */
 
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat";
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata";
+! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat" -y;
+! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata" -y;
 
 
 
