@@ -26,7 +26,7 @@ Social Science Branch staff can find on the socialsci share drive at : /RFA_EO12
 
 Each row contains an observation of a permit-year.  Permits are grouped together through common ownership; vessels with identical owners have the same affiliate_id.  There are three affiliate level columns: *affiliate_total*, *affiliate_fish*, and *affiliate_forhire* revenue.  These columns contain the aggregate revenue, commercial fishing revenue, and for-hire revenue for the firm.  The following table is an example:
 
-affiliate_id|	year|	count_permits|	entity_type_2019|	small_business |	permit|	affiliate_total|	affiliate_fish| value_permit
+affiliate_id|	year|	count_permits|	entity_type_YYYY|	small_business |	permit|	affiliate_total|	affiliate_fish| value_permit
 |---|---|---|---|---|---|---|---| ---|
 1	|2017|	1|	FISHING|	1|	999999|	1675310|	1675310| 1675310
 1	|2018|	1|	FISHING|	1|	999999|	1625835|	1625835|1625835
@@ -38,7 +38,7 @@ We use permit and ownership data from the current year (**ap_year= YYYY**) to li
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
-
+The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY**. 
 
 
 # Warnings
