@@ -40,6 +40,7 @@ Analysis required by the Regulatory Flexibility Act should use the Affiliate_id,
 
 The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY**. 
 
+All revenue and value figures are in nominal terms.
 
 # Warnings
 1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want total revenues, you should either:
