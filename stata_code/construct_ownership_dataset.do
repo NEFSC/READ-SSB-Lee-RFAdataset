@@ -34,7 +34,7 @@ scalar drop _all
 pause off
 
 #delimit ;
-global stat_transfer "C:/Program Files/StatTransfer15-64/st.exe";
+global stat_transfer "C:/Program Files/StatTransfer16-64/st.exe";
 
 
 /* PRELIMINARIES */
