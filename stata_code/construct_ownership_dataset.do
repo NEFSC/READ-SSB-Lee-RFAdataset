@@ -78,19 +78,6 @@ scalar C2020=260.065;
 scalar C2021=275.703;
 scalar C2022=296.963;
 
-/*
-scalar rec_exp2011=111;
-scalar rec_exp2010=round(rec_exp2011*C2010/C2011, .01);
-scalar rec_exp2012=round(rec_exp2011*C2012/C2011, .01);
-scalar rec_exp2013=round(rec_exp2011*C2013/C2011, .01);
-scalar rec_exp2014=round(rec_exp2011*C2014/C2011, .01);
-scalar rec_exp2015=round(rec_exp2011*C2015/C2011, .01);
-scalar rec_exp2016=round(rec_exp2011*C2016/C2011, .01);
-scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
-scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
-scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
-scalar rec_exp2020=round(rec_exp2011*C2020/C2011, .01);
-*/
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 
@@ -111,21 +98,10 @@ scalar rec_exp2021=round(rec_exp2019*C2021/C2019, .01);
 scalar rec_exp2022=round(rec_exp2019*C2022/C2019, .01);
 
 
-/* SBA size standards for-hire, finfish, and shellfish
-Changes to reflect July 2014 changes
-global sba_forhire=7000000;
-global sba_finfish=19000000;
-global sba_shellfish=5000000;
-
-
-global sba_forhire=7500000;
-global sba_finfish=20500000;
-global sba_shellfish=5500000;
-*/
-/* This is the "new" size standard for Small Businesses that NMFS*/
+/* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
-/*      84 FR 34261 changed the standard for for-hire as of July 2019
+/*      84 FR 34261 changed the for-hore standard as of July 2019
 https://www.federalregister.gov/documents/2019/07/18/2019-14980/small-business-size-standards-adjustment-of-monetary-based-size-standards-for-inflation
 */
 global sba_forhire=8000000;
