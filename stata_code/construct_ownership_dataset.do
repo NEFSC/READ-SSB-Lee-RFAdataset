@@ -397,6 +397,8 @@ assert `mytt'==0;
 Shellfish are nespp3=700 to nespp3=806, plus nespp3=834*/
 /* distinguishing between finfish and shellfish isn't necessary anymore, but we'll leave it anyway */
 
+cap gen value806=0;
+order value806, after(value805);
 egen value_permit_shellfish=rowtotal(value700-value806);
 replace value_permit_shellfish=value_permit_shellfish+value834;
 egen value_permit_commercial=rowtotal(value001-value834);
