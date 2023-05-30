@@ -144,8 +144,8 @@ Note2: There are some VP_NUM's that have revenue but no ownership information. T
 
 clear;
 odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year
-	from permit.vps_owner c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner a
-		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner where ap_year=$yr_select group by vp_num)
+	from permit.vps_owner@garfo_nefsc c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner@garfo_nefsc a
+		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where ap_year=$yr_select group by vp_num)
 	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn;
 
 
@@ -317,9 +317,9 @@ save `myt1', replace;
 
 #delimit;
 clear;
-	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner
+	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner@garfo_nefsc
 		where ap_num in
-			(select max(ap_num) as ap_num from permit.vps_fishery_ner where
+			(select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where
 		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
 		 ;")  $mysole_conn;
