@@ -76,7 +76,7 @@ scalar C2018=252.125;
 scalar C2019=256.903;
 scalar C2020=260.065;
 scalar C2021=275.703;
-
+scalar C2022=296.963;
 
 /*
 scalar rec_exp2011=111;
@@ -108,6 +108,7 @@ scalar rec_exp2019 = 135.11;
 /* nothing for 2020 yet, so just adjust the 2019 by CPI */
 scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
 scalar rec_exp2021=round(rec_exp2019*C2021/C2019, .01);
+scalar rec_exp2022=round(rec_exp2019*C2022/C2019, .01);
 
 
 /* SBA size standards for-hire, finfish, and shellfish
