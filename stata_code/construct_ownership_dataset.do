@@ -36,7 +36,6 @@ pause off
 #delimit ;
 global stat_transfer "C:/Program Files/StatTransfer16-64/st.exe";
 
-
 /* PRELIMINARIES */
 /* Take care of Years and deflating */
 /*These lines grab the ``correct year'', based on system date.
@@ -57,6 +56,7 @@ else if $this_month<6{;
 	global yr_permit_portfolio=$this_year-1;
 
 };
+global permit_date_pull "'06/01/${yr_permit_portfolio}'" ;
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
  CPI-U  CUUR0000SA0
@@ -296,7 +296,7 @@ clear;
 	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner@garfo_nefsc
 		where ap_num in
 			(select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where
-		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
+		to_date(${permit_date_pull},'MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
 		 ;")  $mysole_conn;
 
@@ -508,17 +508,17 @@ drop __*;
 sort affiliate_id year permit ;
 compress;
 
-export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
-export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
+export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
+export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
 
-saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
+saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(12);
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
 */
 
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat" -y;
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata" -y;
+! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
+! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
 
 
 
