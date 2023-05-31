@@ -34,8 +34,7 @@ scalar drop _all
 pause off
 
 #delimit ;
-global stat_transfer "C:/Program Files/StatTransfer15-64/st.exe";
-
+global stat_transfer "C:/Program Files/StatTransfer16-64/st.exe";
 
 /* PRELIMINARIES */
 /* Take care of Years and deflating */
@@ -57,6 +56,7 @@ else if $this_month<6{;
 	global yr_permit_portfolio=$this_year-1;
 
 };
+global permit_date_pull "'06/01/${yr_permit_portfolio}'" ;
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
  CPI-U  CUUR0000SA0
@@ -76,21 +76,8 @@ scalar C2018=252.125;
 scalar C2019=256.903;
 scalar C2020=260.065;
 scalar C2021=275.703;
+scalar C2022=296.963;
 
-
-/*
-scalar rec_exp2011=111;
-scalar rec_exp2010=round(rec_exp2011*C2010/C2011, .01);
-scalar rec_exp2012=round(rec_exp2011*C2012/C2011, .01);
-scalar rec_exp2013=round(rec_exp2011*C2013/C2011, .01);
-scalar rec_exp2014=round(rec_exp2011*C2014/C2011, .01);
-scalar rec_exp2015=round(rec_exp2011*C2015/C2011, .01);
-scalar rec_exp2016=round(rec_exp2011*C2016/C2011, .01);
-scalar rec_exp2017=round(rec_exp2011*C2017/C2011, .01);
-scalar rec_exp2018=round(rec_exp2011*C2018/C2011, .01);
-scalar rec_exp2019=round(rec_exp2011*C2019/C2011, .01);
-scalar rec_exp2020=round(rec_exp2011*C2020/C2011, .01);
-*/
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 
@@ -108,23 +95,13 @@ scalar rec_exp2019 = 135.11;
 /* nothing for 2020 yet, so just adjust the 2019 by CPI */
 scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
 scalar rec_exp2021=round(rec_exp2019*C2021/C2019, .01);
+scalar rec_exp2022=round(rec_exp2019*C2022/C2019, .01);
 
 
-/* SBA size standards for-hire, finfish, and shellfish
-Changes to reflect July 2014 changes
-global sba_forhire=7000000;
-global sba_finfish=19000000;
-global sba_shellfish=5000000;
-
-
-global sba_forhire=7500000;
-global sba_finfish=20500000;
-global sba_shellfish=5500000;
-*/
-/* This is the "new" size standard for Small Businesses that NMFS*/
+/* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
-/*      84 FR 34261 changed the standard for for-hire as of July 2019
+/*      84 FR 34261 changed the for-hire standard as of July 2019
 https://www.federalregister.gov/documents/2019/07/18/2019-14980/small-business-size-standards-adjustment-of-monetary-based-size-standards-for-inflation
 */
 global sba_forhire=8000000;
@@ -143,8 +120,8 @@ Note2: There are some VP_NUM's that have revenue but no ownership information. T
 
 clear;
 odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year
-	from permit.vps_owner c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner a
-		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner where ap_year=$yr_select group by vp_num)
+	from permit.vps_owner@garfo_nefsc c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner@garfo_nefsc a
+		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where ap_year=$yr_select group by vp_num)
 	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn;
 
 
@@ -190,14 +167,14 @@ save `ownership', replace;
 
 display "check2";
 /***************************************************
-2a.  Landings and revenues from Last 3 years
+2a.  Landings and revenues from Last 5 years
 ***************************************************/
-global firstyr= $yr_select-2;
+global firstyr= $yr_select-4;
 local schema "cfdbs.cfders";
 
 
 /* Extraction loop
-Loop over 3 years of CFDERS, extracting vessel level revenues by NESPP3.  Cast <null> sppvalues to 0.
+Loop over 5 years of CFDERS, extracting vessel level revenues by NESPP3.  Cast <null> sppvalues to 0.
 Smash them into a single dataset.  */
 forvalues yr=$firstyr/$yr_select {;
 	clear;
@@ -300,14 +277,32 @@ save `myt1', replace;
 merge m:1 permit using `ownership';
 
 /*
+I need to fill the affiliate_id for any semi-matches.  These are 
+Permits that only show up once
+	These are difficult, because they could have 1-2 years of revenue and may not be active in the most recent year
+*/
+tsset permit year;
+tsfill, full;
+
+sort permit (affiliate_id);
+
+foreach var of varlist person_id*{;
+	bysort permit (affiliate_id) : replace `var'=`var'[1] if `var'==. & affiliate_id==.;
+};
+bysort permit (affiliate_id) : replace affiliate_id=affiliate_id[1] if affiliate_id==.;
+
+bysort permit (_merge): gen any_miss=_merge==1;
+bysort permit: gen sum_any_miss=sum(any_miss);
+
+/*
 _merge==1 there are no owner_ids. We need to create a distinct affiliation id for each of these.  I will use the permit number.
 _merge==2 there were no landings.  Need to tsset, then fill  so that value==0.  We'll do this at Checkpoint 100
 _merge==3. There is a match between affiliation and revenue dataset.  Nothing to do.
 */
 
 display "check5";
-replace affiliate_id=permit if _merge==1;
-drop _merge;
+replace affiliate_id=permit if sum_any_miss>=1;
+drop _merge sum_any_miss any_miss;
 save `myt1', replace;
 
 
@@ -316,10 +311,10 @@ save `myt1', replace;
 
 #delimit;
 clear;
-	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner
+	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner@garfo_nefsc
 		where ap_num in
-			(select max(ap_num) as ap_num from permit.vps_fishery_ner where
-		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
+			(select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where
+		to_date(${permit_date_pull},'MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
 		 ;")  $mysole_conn;
 
@@ -327,7 +322,6 @@ clear;
 
 
 gen str6 plancat=plan+"_"+cat;
-pause;
 /* store the distinct plan_cat for usage later */
 levelsof plancat, local(myplans) clean;
 drop plan cat;
@@ -338,18 +332,23 @@ reshape wide ppp, i(vp) j(plancat) string;
 rename vp_num permit;
 sort permit;
 tempfile perms;
-expand 3;
+expand 5;
 gen year=$yr_select;
 bysort permit: replace year=year-_n+1;
 
 save `perms';
 
 
-/* join permit data back to dataset */
+/* join permit data back to dataset. There are apparently some permits with no ownership info or landings, but permits.  */
 use `myt1', clear;
 
-merge m:1 permit year using `perms';
-/*This join is messy. All permit-years in the CFDBS-ownership data that do not a particular type of Federal permit (_merge=1).
+merge 1:1 permit year using `perms';
+display "check5";
+replace affiliate_id=permit if affiliate_id==.;
+
+
+
+/*This join is messy. All permit-years in the CFDBS-ownership data that do not have any Federal permit (_merge=1).
 	These can be filled in with 0's
 
 
@@ -357,28 +356,17 @@ merge m:1 permit year using `perms';
 
 This is fixed at checkpoint 101.*/
 
-
-drop _merge;
-
-
-
-
-
-
-
-/* Checkpoint 100: Deal with permits that only show up once
-	These are a special kind of awful, because they would have 1-2 years of revenue but no permits in the most recent year.
-	If they had a permit in the most recent year, they'd have matched to the permit data*/
-tsset permit year;
-tsfill, full;
-
-
-
+quietly foreach var of varlist ppp* {;
+	replace `var'=0 if `var'==.;
+};
 
 /* fill in zeros for missing values of revenue */
 quietly foreach var of varlist value* {;
 	replace `var'=0 if `var'==.;
 };
+
+pause;
+
 
 /* 4.  Construct Affiliate level gross revenues, gross revenues by "category", and make a determination of "SMALL" and "LARGE" */
 /*fill in missing affiliates with permit numbers.  This will be for vessels with no ownership information but that had landings or owned a permit*/
@@ -396,6 +384,8 @@ assert `mytt'==0;
 Shellfish are nespp3=700 to nespp3=806, plus nespp3=834*/
 /* distinguishing between finfish and shellfish isn't necessary anymore, but we'll leave it anyway */
 
+cap gen value806=0;
+order value806, after(value805);
 egen value_permit_shellfish=rowtotal(value700-value806);
 replace value_permit_shellfish=value_permit_shellfish+value834;
 egen value_permit_commercial=rowtotal(value001-value834);
@@ -445,10 +435,21 @@ bysort affiliate_id (year): replace entity_type_$yr_select=entity_type_$yr_selec
 /*ensure all entities are classified*/
 assert strmatch(entity_type_$yr_select,"")==0;
 
-/* classify affiliate_id as small or large based on 3-year average of TOTAL revenues and the appropriate size standard.
+/* classify affiliate_id as small or large based on 5-year average of TOTAL revenues. Use the appropriate size standard.
 */
-bysort affiliate_id: egen affiliate_bar=sum(value_permit);
-replace affiliate_bar=affiliate_bar/3;
+clonevar value_dum=value_permit;
+
+
+/* get the right number of observations */
+gen counter=1;
+bysort affiliate_id year (permit): replace counter=0 if _n>1;
+bysort affiliate_id: egen affiliate_counter=sum(counter);
+
+bysort affiliate_id: egen affiliate_bar=sum(value_dum);
+
+
+/* AVERAGE REVENUE */
+replace affiliate_bar=affiliate_bar/affiliate_counter;
 
 gen small_business=1;
 replace small_business=0 if strmatch(entity_type_$yr_select,"FORHIRE") & affiliate_bar>=$sba_forhire;
@@ -529,17 +530,17 @@ drop __*;
 sort affiliate_id year permit ;
 compress;
 
-export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
-export excel using "${my_datadir}/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
+export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
+export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
 
-saveold "${my_datadir}/affiliates_${vintage_string}.dta", replace version(12);
+saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(12);
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
 */
 
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.sas7bdat" -y;
-! "$stat_transfer" "${my_datadir}/affiliates_${vintage_string}.dta"  "${my_datadir}/affiliates_${vintage_string}.Rdata" -y;
+! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
+! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
 
 
 
