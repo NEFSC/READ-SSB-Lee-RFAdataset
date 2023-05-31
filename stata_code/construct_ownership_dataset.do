@@ -439,12 +439,10 @@ assert strmatch(entity_type_$yr_select,"")==0;
 /* classify affiliate_id as small or large based on 3-year average of TOTAL revenues for the "FISHING" firms and 5 year total revenues for "FOR HIRE" firms. Use the appropriate size standard.
 */
 clonevar value_dum=value_permit;
-replace value_dum=. if entity_type_$yr_select=="FISHING" & year<$yr_select-2;
 
 
-/* get the right number of observations for FISHING (3), FORHIRE (5) and NO_REV (5) firms */
+/* get the right number of observations */
 gen counter=1;
-replace counter=0 if value_dum==.;
 bysort affiliate_id year (permit): replace counter=0 if _n>1;
 bysort affiliate_id: egen affiliate_counter=sum(counter);
 
