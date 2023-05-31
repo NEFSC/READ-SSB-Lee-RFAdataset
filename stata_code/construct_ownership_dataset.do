@@ -102,7 +102,7 @@ scalar rec_exp2022=round(rec_exp2019*C2022/C2019, .01);
 /* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
 global sba_comm=11000000;
 global sba_forhire=7500000;
-/*      84 FR 34261 changed the for-hore standard as of July 2019
+/*      84 FR 34261 changed the for-hire standard as of July 2019
 https://www.federalregister.gov/documents/2019/07/18/2019-14980/small-business-size-standards-adjustment-of-monetary-based-size-standards-for-inflation
 */
 global sba_forhire=8000000;
@@ -436,7 +436,7 @@ bysort affiliate_id (year): replace entity_type_$yr_select=entity_type_$yr_selec
 /*ensure all entities are classified*/
 assert strmatch(entity_type_$yr_select,"")==0;
 
-/* classify affiliate_id as small or large based on 3-year average of TOTAL revenues for the "FISHING" firms and 5 year total revenues for "FOR HIRE" firms. Use the appropriate size standard.
+/* classify affiliate_id as small or large based on 5-year average of TOTAL revenues. Use the appropriate size standard.
 */
 clonevar value_dum=value_permit;
 
