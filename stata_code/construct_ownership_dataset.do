@@ -57,6 +57,7 @@ else if $this_month<6{;
 	global yr_permit_portfolio=$this_year-1;
 
 };
+local permit_date_pull "'06/01/${yr_permit_portfolio}'" ;
 /*Rec expenditures per angler and CPI for adjusting from the 2011 expenditure survey
 
  CPI-U  CUUR0000SA0
@@ -296,7 +297,7 @@ clear;
 	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner@garfo_nefsc
 		where ap_num in
 			(select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where
-		to_date('06/01/$yr_permit_portfolio','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
+		to_date(`permit_date_pull','MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
 		 ;")  $mysole_conn;
 
