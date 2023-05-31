@@ -9,8 +9,6 @@ Join to the PLAN-CAT data from vps_fishery_ner
 */
 #delimit ; 
 
-do "${my_codedir}/global_setup.do" ;
-
 
 /* merge commercial to for-hire */
 

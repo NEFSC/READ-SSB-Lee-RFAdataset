@@ -12,7 +12,6 @@
 
 
 
-do "${my_codedir}/global_setup.do"
 do "${my_codedir}/extraction_code/01_extract_ownership.do"
 do "${my_codedir}/extraction_code/02_commercial_revenues.do"
 do "${my_codedir}/extraction_code/03_for_hire_revenues.do"
