@@ -30,7 +30,6 @@ cap mkdir ${my_datadir}/intermediate;
 cap mkdir ${my_datadir}/final;
 
 
-global stat_transfer "C:/Program Files/StatTransfer16-64/st.exe";
 
 /* PRELIMINARIES */
 /* Take care of Years and deflating */
