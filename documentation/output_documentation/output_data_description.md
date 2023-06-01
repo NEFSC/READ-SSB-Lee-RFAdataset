@@ -3,7 +3,7 @@ This is a description of the data products that are produced by code in this rep
 
 # Purpose
 
-These data are assembled for analysis required by the Regulatory Flexibility Act.  Fishing vessels (permits) are linked together, an industry determination is made, and firms are classified as small or large based on SBA guidelines.  Per SBA guidelines, we use revenue data in a single year to make the industry determination. Per SBA guidelines, we use 3 year trailing average to make the "small"" determination.  
+These data are assembled for analysis required by the Regulatory Flexibility Act.  Fishing vessels (permits) are linked together, an industry determination is made, and firms are classified as small or large based on SBA guidelines.  Per SBA guidelines, we use revenue data in a single year to make the industry determination. Per SBA guidelines, we use 5 year trailing average to make the "small" determination.  
 
 You should think *very carefully* about using this dataset for other purposes.
 
@@ -34,7 +34,7 @@ affiliate_id|	year|	count_permits|	entity_type_YYYY|	small_business |	permit|	af
 2	| 2017|	2|	FISHING|	1|	111111|	**2830508**|	**2830508**|*1240510*
 2|	2017|	2|	FISHING|	1|	222222|	**2830508**|	**2830508**|*1589998*
 
-We use permit and ownership data from the current year (**ap_year= YYYY**) to link together permits into firms.  We use permit holdings on **June 1**  of the **current year** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful is quickly determining the regulated entity.  We use dealer plus clam processor report data from years **YYYY-3** through year **YYYY-1** to construct commercial revenues.  VTR data combined with recreational survey data are used to construct for-hire revenues.
+We use permit and ownership data from the current year (**ap_year= YYYY**) to link together permits into firms.  We use permit holdings on **June 1**  of the **current year** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful to quickly determine if an entity is regulated.  We use dealer plus clam processor report data from years **YYYY-5** through year **YYYY-1** to construct commercial revenues.  VTR data combined with recreational survey data are used to construct for-hire revenues.
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
@@ -47,9 +47,9 @@ All revenue and value figures are in nominal terms.
     1. Retain only the distinct AFFILIATE_ID and YEAR entries and SUM the affiliate revenue columns, or 
     2. Sum the value_permit, value_permit_forhire, or valueSSS columns
 
-2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.  Once a group of permits is affiliated together, revenues for the trailing 3 years are combined and aggregated.  For example, if permits 123 and 456 were affiliated in 2013 but not in 2011 or 2012, the average revenues for 123 and 456 across the 2011-20123 period are summed when making a SBA size determination.  This is consistent with current SBA guidance.
+2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.  Once a group of permits is affiliated together, revenues for the trailing 3 years are combined and aggregated.  For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-2021, the revenues for 123 and 456 across the 2017-2021 period averaged when making a SBA size determination.  This is consistent with current SBA guidance.
 
-3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2013, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2014.  This is probably fine for RFA purposes.
+3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2021, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2022.  This is probably fine for RFA purposes.
 
 4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
 # Examples
@@ -104,3 +104,10 @@ In determining the primary industry in which a concern or a concern combined wit
 NMFS has it's own [size standards](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/2015-32564.pdf) for commercial fishing.  The commerical fishing size standard is $11M.
 
 For other industries related to the marine economy, see the SBA's [size standards](https://github.com/NEFSC/READ-SSB-Lee-RFAdataset/blob/master/documentation/2019-14980.pdf).  As of August 19, 2019 the for-hire (NAICS 487210) standard is $8M. 
+
+## 84 FR 66561
+
+SBA modified the way [average reciepts](https://www.federalregister.gov/documents/2019/12/05/2019-26041/small-business-size-standards-calculation-of-annual-average-receipts) should be calculated, going from a 3-year to a 5-year period.  The RIN is 3245-AH16.
+
+
+
