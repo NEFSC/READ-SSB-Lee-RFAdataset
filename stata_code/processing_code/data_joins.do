@@ -241,6 +241,20 @@ foreach var of varlist BLU_* BSB_* DOG_* FLS_* HMS_* HRG_* LGC_* LO_* MNK_* MUL_
 
 drop __*;
 sort affiliate_id year permit ;
+
+/* assert that every affiliate_id is in every year*/
+preserve;
+keep affiliate_id year;
+duplicates drop;
+tsset affiliate_id year;
+assert strmatch("`r(balanced)'","strongly balanced");
+restore;
+
+/* assert that I see every permit in every year */
+tsset permit year;
+assert "`r(balanced)'"=="strongly balanced";
+
+
 compress;
 
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
@@ -249,12 +263,10 @@ export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firs
 
 saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(12);
 
-/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
-*/
+/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets*/
 
 ! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
 ! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
-
 
 
 
