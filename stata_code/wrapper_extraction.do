@@ -9,8 +9,12 @@
 	c. Compute the for-hire revenue based on VESLOG
 3. Pull the permit data.
 */
-
-
+/*
+erase ${my_datadir}/intermediate/commercial_revenues.dta
+erase ${my_datadir}/intermediate/ownership.dta
+erase ${my_datadir}/intermediate/permits.dta
+erase ${my_datadir}/intermediate/recreational.dta
+*/
 
 do "${my_codedir}/extraction_code/01_extract_ownership.do"
 do "${my_codedir}/extraction_code/02_commercial_revenues.do"
