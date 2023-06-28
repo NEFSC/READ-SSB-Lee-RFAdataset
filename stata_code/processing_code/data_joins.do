@@ -265,8 +265,8 @@ saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets*/
 
-! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
-! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
+! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
+! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
 
 
 
