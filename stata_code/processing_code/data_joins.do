@@ -265,8 +265,12 @@ saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets*/
 
-! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
-! "$stat_transfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
+! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
+! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
 
 
 
+if $this_month<6{;
+    di "Today is"  %td_CCYY_NN_DD date(c(current_date), "DMY");
+    di "It is before the Jun 1 permit cutoff, so this data is preliminary";
+};
