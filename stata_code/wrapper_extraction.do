@@ -27,9 +27,10 @@ do "${my_codedir}/extraction_code/04_permit_portfolio.do"
 
 
 
-
-
-
+if $this_month<6{
+    di "Today is"  %td_CCYY_NN_DD date(c(current_date), "DMY")
+    di "It is before the Jun 1 permit cutoff, so this data is preliminary"
+}
 
 
 

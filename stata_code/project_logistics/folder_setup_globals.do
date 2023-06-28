@@ -103,7 +103,12 @@ global sba_forhire=8000000;
 
 
 
+if $this_month<6{;
+    di "Today is"  %td_CCYY_NN_DD date(c(current_date), "DMY");
+    di "It is before the Jun 1 permit cutoff, so this data is preliminary";
+	global vintage_string PROTOTYPE_$today_date_string ;
 
+};
 
 
 

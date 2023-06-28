@@ -270,3 +270,7 @@ saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(
 
 
 
+if $this_month<6{;
+    di "Today is"  %td_CCYY_NN_DD date(c(current_date), "DMY");
+    di "It is before the Jun 1 permit cutoff, so this data is preliminary";
+};
