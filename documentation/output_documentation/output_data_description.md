@@ -86,7 +86,7 @@ Please see the subfolder in "stata_code" for a few stata code samples.  You're o
 
 (c) Period of measurement.
 
-(1) Annual receipts of a concern that has been in business for three or more completed fiscal years means the **total receipts of the concern over its most recently completed three fiscal years divided by three**.
+(1) (1) Except for the Business Loan, Disaster Loan, Surety Bond Guarantee, and Small Business Investment Company (SBIC) Programs, annual receipts of a concern that has been in business for 5 or more completed fiscal years means the **total receipts of the concern over its most recently completed 5 fiscal years divided by 5**. 
 
 (d) Annual receipts of affiliates. 
 
