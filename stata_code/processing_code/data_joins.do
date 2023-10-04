@@ -257,6 +257,12 @@ assert "`r(balanced)'"=="strongly balanced";
 
 compress;
 
+cap drop value_dum;
+cap drop _merge;
+cap drop counter;
+cap drop affiliate_counter;
+
+
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
