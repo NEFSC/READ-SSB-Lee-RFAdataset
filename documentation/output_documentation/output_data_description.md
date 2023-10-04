@@ -51,7 +51,7 @@ All revenue and value figures are in nominal terms.
 
 | Column | Type | Definition |  
 |---|---|---|
-|affiliate_id|    float|   Key that identifies an entity. Not consistent across data vintages. See Warning 3 below. | 
+|affiliate_id|    float|   Key that identifies an entity in this dataset. Not consistent across data vintages. See Warning 3 below. | 
 |year|            int |   Calendar year corresponding to revenue and value columns.  | 
 |count_permits|   byte |  Number of distinct permits owned by an entity in year YYYY.|               
 |entity_type_*YYYY-1* | string7| The type of entity ("FISHING", "FORHIRE", "NO_REV") based on the source majority of revenues in the previous year. If a firm had zero revenues in year YYYY-1, then it is classified as "NO_REV"|                 
