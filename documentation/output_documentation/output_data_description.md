@@ -14,19 +14,25 @@ We run this code to provide data once a year, just after June 1st.  If critical 
 # Data storage
 Social Science Branch staff can find on the socialsci share drive at : /RFA_EO12866 Guidelines/ownership_data/.  There, you will find current data, archived data, and background information.
 
+## Data Vintages
 
-# Filenames
+I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the data was extracted and processed.
 
-1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY-MM-DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
+
+##  Filenames
+
+1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of 2023, the columns AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, and PERMIT are stored in mlee.RFAYYYY
-
+1. As of July 2023, four columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, and PERMIT are stored on the, you can get the 2023 data with the following query:
+```
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT from mlee.RFA2023@sole 
+```
 
 # Overview
 
 Each row contains an observation of a permit-year.  Permits are grouped together through common ownership; vessels with identical owners have the same affiliate_id.  There are three affiliate level columns: *affiliate_total*, *affiliate_fish*, and *affiliate_forhire* revenue.  These columns contain the aggregate revenue, commercial fishing revenue, and for-hire revenue for the firm.  The following table is an example:
 
-affiliate_id|	year|	count_permits|	entity_type_YYYY|	small_business |	permit|	affiliate_total|	affiliate_fish| value_permit
+affiliate_id|	year|	count_permits|	entity_type_YYYY-1|	small_business |	permit|	affiliate_total|	affiliate_fish| value_permit
 |---|---|---|---|---|---|---|---| ---|
 1	|2017|	1|	FISHING|	1|	999999|	1675310|	1675310| 1675310
 1	|2018|	1|	FISHING|	1|	999999|	1625835|	1625835|1625835
@@ -34,7 +40,7 @@ affiliate_id|	year|	count_permits|	entity_type_YYYY|	small_business |	permit|	af
 2	| 2017|	2|	FISHING|	1|	111111|	**2830508**|	**2830508**|*1240510*
 2|	2017|	2|	FISHING|	1|	222222|	**2830508**|	**2830508**|*1589998*
 
-We use permit and ownership data from the current year (**ap_year= YYYY**) to link together permits into firms.  We use permit holdings on **June 1**  of the **current year** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a “PLAN_CAT” and 0 otherwise. These may be useful to quickly determine if an entity is regulated.  We use dealer plus clam processor report data from years **YYYY-5** through year **YYYY-1** to construct commercial revenues.  VTR data combined with recreational survey data are used to construct for-hire revenues.
+We use permit and ownership data from the current year (**ap_year= YYYY**) to link together permits into firms.  We use permit holdings on **June 1**  of the **current year** to construct the PLAN_CAT variables.  These take on the value of "1" if a permit held a **PLAN_CAT** and 0 otherwise. These may be useful to quickly determine if an entity is regulated.  We use dealer plus clam processor report data from years **YYYY-5** through year **YYYY-1** to construct commercial revenues.  VTR data combined with recreational survey data are used to construct for-hire revenues.
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
@@ -42,16 +48,41 @@ The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE")
 
 All revenue and value figures are in nominal terms.
 
+
+| Column | Type | Definition |  
+|---|---|---|
+|affiliate_id|    float|   Key that identifies an entity in this dataset. Not consistent across data vintages. See Warning 3 below. | 
+|year|            int |   Calendar year corresponding to revenue and value columns.  | 
+|count_permits|   byte |  Number of distinct permits owned by an entity in year YYYY.|               
+|entity_type_*YYYY-1* | string7| The type of entity ("FISHING", "FORHIRE", "NO_REV") based on the source majority of revenues in the previous year. If a firm had zero revenues in year YYYY-1, then it is classified as "NO_REV"|                 
+|small_business|  byte |  =1 if a firms is a small business, =0 otherwise.|             
+|permit|          long|   permit number | 
+|affiliate_total| float|  total revenues for the affiliate in a year |           
+|affiliate_fish|  float|  commercial fishing revenues for the affiliate in a year |              
+|affiliate_forhire| float| for-hire revenues for the affiliate in a year|               
+|value_permit|    float|  value of revenues, all sources, for the **permit** in a year|           
+|value_permit_forhire| float|value of for-hire revenues for the **permit** in a year|          
+|value*NNN* | float| value of commercial revenues for the **permit** in a year from NESPP3 code *NNN* |          
+|person_id*Y* | int | The person_id of an owner. For a row of data, these are arranged in increasing order of person_id |          
+|PLAN_CAT | byte | =1 if a vessel held a permit of "PLAN" and "CAT", =0 otherwise |          
+
 # Warnings
-1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want total revenues, you should either:
+1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want aggregate revenues for a fleet, you should either:
     1. Retain only the distinct AFFILIATE_ID and YEAR entries and SUM the affiliate revenue columns, or 
     2. Sum the value_permit, value_permit_forhire, or valueSSS columns
 
-2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.  Once a group of permits is affiliated together, revenues for the trailing 5 years are combined and aggregated.  For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-2021, the revenues for 123 and 456 across the 2017-2021 period averaged when making a SBA size determination.  This is consistent with current SBA guidance.
+2. There is no guarantee that permits that were affiliated in a particular year were also affiliated in previous years.  
+For example, the fact that permits 123 and 456 were affiliated in 2013, does not imply that they were affiliated in 2012.
+
+3.  Once a group of permits is affiliated together, revenues for the trailing 5 years are combined and aggregated.  
+For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-2021, the revenues for 123 and 456 across the 2017-2021 period averaged when making a SBA size determination.  This is consistent with current SBA guidance.
 
 3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2021, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2022.  This is probably fine for RFA purposes.
 
 4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
+
+5. The YYYY-1 part of Entity_type_YYYY-1 is slightly confusing.  See §121.107 below.
+
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
 
@@ -86,7 +117,7 @@ Please see the subfolder in "stata_code" for a few stata code samples.  You're o
 
 (c) Period of measurement.
 
-(1) (1) Except for the Business Loan, Disaster Loan, Surety Bond Guarantee, and Small Business Investment Company (SBIC) Programs, annual receipts of a concern that has been in business for 5 or more completed fiscal years means the **total receipts of the concern over its most recently completed 5 fiscal years divided by 5**. 
+(1) Annual receipts of a concern that has been in business for ~~three~~ five or more completed fiscal years means the total receipts of the concern over its most recently completed three fiscal years divided by ~~three~~ five.  See the subsection on 84 FR 66561.
 
 (d) Annual receipts of affiliates. 
 
@@ -107,7 +138,7 @@ For other industries related to the marine economy, see the SBA's [size standard
 
 ## 84 FR 66561
 
-SBA modified the way [average reciepts](https://www.federalregister.gov/documents/2019/12/05/2019-26041/small-business-size-standards-calculation-of-annual-average-receipts) should be calculated, going from a 3-year to a 5-year period.  The RIN is 3245-AH16.
+SBA modified the way [average receipts](https://www.federalregister.gov/documents/2019/12/05/2019-26041/small-business-size-standards-calculation-of-annual-average-receipts) should be calculated, going from a 3-year to a 5-year period.  The RIN is 3245-AH16.
 
 
 
