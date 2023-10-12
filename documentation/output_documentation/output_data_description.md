@@ -117,11 +117,7 @@ Please see the subfolder in "stata_code" for a few stata code samples.  You're o
 
 (c) Period of measurement.
 
-<<<<<<< Updated upstream
-(1) (1) Except for the Business Loan, Disaster Loan, Surety Bond Guarantee, and Small Business Investment Company (SBIC) Programs, annual receipts of a concern that has been in business for 5 or more completed fiscal years means the **total receipts of the concern over its most recently completed 5 fiscal years divided by 5**. 
-=======
-(1) Annual receipts of a concern that has been in business for ~~three~~ five or more completed fiscal years means the **total receipts of the concern over its most recently completed three fiscal years divided by ~~three~~ five **.  See the subsection on 84 FR 66561.
->>>>>>> Stashed changes
+(1) Annual receipts of a concern that has been in business for ~~three~~ five or more completed fiscal years means the total receipts of the concern over its most recently completed three fiscal years divided by ~~three~~ five.  See the subsection on 84 FR 66561.
 
 (d) Annual receipts of affiliates. 
 
@@ -142,7 +138,7 @@ For other industries related to the marine economy, see the SBA's [size standard
 
 ## 84 FR 66561
 
-SBA modified the way [average reciepts](https://www.federalregister.gov/documents/2019/12/05/2019-26041/small-business-size-standards-calculation-of-annual-average-receipts) should be calculated, going from a 3-year to a 5-year period.  The RIN is 3245-AH16.
+SBA modified the way [average receipts](https://www.federalregister.gov/documents/2019/12/05/2019-26041/small-business-size-standards-calculation-of-annual-average-receipts) should be calculated, going from a 3-year to a 5-year period.  The RIN is 3245-AH16.
 
 
 
