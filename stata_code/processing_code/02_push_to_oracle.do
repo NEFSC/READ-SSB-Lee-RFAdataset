@@ -8,7 +8,7 @@ sort affiliate_id permit;
 
 
 local nl "lower";
-local oracle_no_lower: list global(mysole_conn) - local(nl);
+local oracle_no_lower: list global(myNEFSC_USERS_conn) - local(nl);
 
 
 capture odbc exec("DROP TABLE mlee.RFA${next_year};"), `oracle_no_lower' ;
@@ -24,5 +24,5 @@ odbc exec("CREATE TABLE mlee.RFA${next_year} (
 
 
 odbc insert affiliate_id entity_type_ small_business permit, table("mlee.RFA${next_year}") `oracle_no_lower' ;
-/*no TMURPHY, KBISACK on sole right now.*/
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to GARDINI,GDEPIPER, SSTEINBA,CDEMARES,JWALDEN,SWERNER" ) , `oracle_no_lower';
+/*no TMURPHY, SSTEINBA on NEFSC_USERS right now.*/
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to GARDINI,GDEPIPER,KBISACK, CDEMARES,JWALDEN,SWERNER, DCORVI" ) , `oracle_no_lower';
