@@ -25,4 +25,4 @@ odbc exec("CREATE TABLE mlee.RFA${next_year} (
 
 odbc insert affiliate_id entity_type_ small_business permit, table("mlee.RFA${next_year}") `oracle_no_lower' ;
 /*no TMURPHY, SSTEINBA on NEFSC_USERS right now.*/
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMARES, GARDINI, GDEPIPER, JDIDDEN, JWALDEN, KBISACK, NPRADHAN, SWERNER, DCORVI, JCOUTURE" ) , `oracle_no_lower';
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMARES, GARDINI, GDEPIPER, JDIDDEN, JWALDEN, KBISACK, NPRADHAN, SWERNER, DCORVI, JCOUTURE, NEFMC_DAVID_MCCARRON" ) , `oracle_no_lower';
