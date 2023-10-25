@@ -89,7 +89,7 @@ scalar rec_exp2018 = 132.40;
 scalar rec_exp2019 = 135.11;
 scalar rec_exp2020=137.82;
 scalar rec_exp2021=140.53;
-scalar rec_exp2022=143.24
+scalar rec_exp2022=143.24;
 scalar rec_exp2023=round(rec_exp2022*C2023/C2022, .01);
 
 
