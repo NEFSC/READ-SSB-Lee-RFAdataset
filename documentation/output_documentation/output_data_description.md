@@ -23,11 +23,14 @@ I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the dat
 
 1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of July 2023, four columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, and PERMIT are stored on the, you can get the 2023 data with the following query:
+1. As of July 2023, four columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE are stored on the oracle servers, you can get the 2023 data with the following query:
 ```
-select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT from mlee.RFA2023@sole 
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE  from mlee.RFA2023@NEFSC_USERS 
 ```
 
+It is also available on sole
+
+ 
 # Overview
 
 Each row contains an observation of a permit-year.  Permits are grouped together through common ownership; vessels with identical owners have the same affiliate_id.  There are three affiliate level columns: *affiliate_total*, *affiliate_fish*, and *affiliate_forhire* revenue.  These columns contain the aggregate revenue, commercial fishing revenue, and for-hire revenue for the firm.  The following table is an example:
