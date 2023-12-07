@@ -114,7 +114,7 @@ bysort affiliate_id year: egen affiliate_forhire=sum(value_permit_forhire);
 
 order affiliate_t affiliate_f*, after(year);
 
-format affiliate_total-value834 %16.0gc;
+format affiliate* value* %16.0gc;
 sort permit year;
 
 
