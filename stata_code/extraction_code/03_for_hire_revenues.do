@@ -21,10 +21,10 @@ odbc load,  exec("select VESSEL_PERMIT_NUM as permit, extract(YEAR FROM DATE_SAI
 	extract(YEAR FROM DATE_SAIL) BETWEEN $firstyr and $yr_select
 	group by VESSEL_PERMIT_NUM, extract(YEAR FROM DATE_SAIL);") $myNEFSC_USERS_conn;
 
-gen rec_exp=.
-forvalues yr = $firstyr(1)$yr_select {
-		replace rec_exp=scalar(rec_exp`yr') if year==`yr'
- } 
+gen rec_exp=.;
+forvalues yr = $firstyr(1)$yr_select {;
+		replace rec_exp=scalar(rec_exp`yr') if year==`yr';
+ } ;
 	
 gen value_permit_forhire=round(anglers*rec_exp);
 drop rec_exp;
