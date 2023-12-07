@@ -2,12 +2,12 @@
 
 #delimit;
 clear;
-	odbc load,  exec("select vp_num, plan, cat from permit.vps_fishery_ner@garfo_nefsc
+	odbc load,  exec("select vp_num, plan, cat from NEFSC_GARFO.PERMIT_VPS_FISHERY_NER
 		where ap_num in
-			(select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where
+			(select max(ap_num) as ap_num from NEFSC_GARFO.PERMIT_VPS_FISHERY_NER where
 		to_date(${permit_date_pull},'MM/DD/YYYY') between trunc(start_date,'DD') and trunc(end_date,'DD')
 		 group by vp_num)
-		 ;")  $mysole_conn;
+		 ;")  $myNEFSC_USERS_conn;
 
 
 
