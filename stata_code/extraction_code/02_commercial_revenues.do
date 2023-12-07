@@ -21,8 +21,17 @@ compress;
 display "check3";
 
 
+preserve;
+collapse (sum) value, by(permit year);
+tempfile total;
+gen itis_tsn="ZZZZZZ";
+save `total';
+restore;
+append using `total';
+
 
 reshape wide value, i(permit year) j(itis_tsn) string;
+rename valueZZZZZZ value_commerical;
 save ${my_datadir}/intermediate/commercial_revenues.dta, replace;
 
 
