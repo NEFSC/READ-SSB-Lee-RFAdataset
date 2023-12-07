@@ -89,20 +89,6 @@ tempvar mytt;
 duplicates tag permit affiliate_id year, gen(`mytt');
 assert `mytt'==0;
 
-
-
-
-
-/*Aggregate revenues to shellfish, finfish, commercial, and total levels
-Shellfish are nespp3=700 to nespp3=806, plus nespp3=834*/
-/* distinguishing between finfish and shellfish isn't necessary anymore, but we'll leave it anyway */
-
-cap gen value806=0;
-order value806, after(value805);
-egen value_permit_shellfish=rowtotal(value700-value806);
-replace value_permit_shellfish=value_permit_shellfish+value834;
-egen value_permit_commercial=rowtotal(value001-value834);
-gen value_permit_finfish=value_permit_commercial-value_permit_shellfish;
 gen value_permit=value_permit_commercial+value_permit_forhire;
 
 /* fill in missing affiliate_ids : last, first, middle */
@@ -113,7 +99,7 @@ replace affiliate_id=permit if affiliate_id==.;
 assert affiliate_id~=.;
 
 
-order affiliate_id permit year value_permit value_permit_finfish value_permit_shellfish value_permit_forhire value_permit_commercial;
+order affiliate_id permit year value_permit value_permit_forhire value_permit_commercial;
 sort affiliate_id permit year;
 quietly compress;
 
@@ -123,12 +109,9 @@ For affiliate_ids with more than 1 permit in a year, there are "multiple" duplic
 */
 
 bysort affiliate_id year: egen affiliate_total=sum(value_permit);
-bysort affiliate_id year: egen affiliate_shellfish=sum(value_permit_shell);
-bysort affiliate_id year: egen affiliate_finfish=sum(value_permit_finfish);
-
-gen affiliate_fish=affiliate_shellfish + affiliate_finfish;
+bysort affiliate_id year: egen affiliate_fish=sum(value_permit_commercial);
 bysort affiliate_id year: egen affiliate_forhire=sum(value_permit_forhire);
-drop affiliate_shellfish affiliate_finfish value_permit_shellfish value_permit_finfish;
+
 order affiliate_t affiliate_f*, after(year);
 
 format affiliate_total-value834 %16.0gc;
