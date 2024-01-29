@@ -32,7 +32,7 @@ append using `total';
 
 reshape wide value, i(permit year) j(itis_tsn) string;
 rename valueZZZZZZ value_permit_commercial;
-label var value_permit_commercial "value from commercial fishing"
-save ${my_datadir}/intermediate/commercial_revenues.dta, replace;
+label var value_permit_commercial "value from commercial fishing";
+save ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, replace;
 
 

@@ -29,7 +29,7 @@ forvalues yr = $firstyr(1)$yr_select {;
 gen value_permit_forhire=round(anglers*rec_exp);
 drop rec_exp;
 sort permit year;
-save ${my_datadir}/intermediate/recreational.dta, replace;
+save ${my_datadir}/intermediate/recreational_${vintage_string}.dta, replace;
 
 
 

@@ -12,12 +12,12 @@ Join to the PLAN-CAT data from vps_fishery_ner
 
 /* merge commercial to for-hire */
 
-use ${my_datadir}/intermediate/commercial_revenues.dta, replace;
-merge 1:1 permit year using  ${my_datadir}/intermediate/recreational.dta;
+use ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, replace;
+merge 1:1 permit year using  ${my_datadir}/intermediate/recreational_${vintage_string}.dta;
 drop _merge;
 
 /*3. Join revenues data to affiliates (ownership data). */
-merge m:1 permit using ${my_datadir}/intermediate/ownership.dta;
+merge m:1 permit using ${my_datadir}/intermediate/ownership_${vintage_string}.dta;
 
 
 
@@ -56,7 +56,7 @@ drop _merge sum_any_miss any_miss;
 
 /* join permit data back to dataset. There are apparently some permits with no ownership info or landings, but permits.  */
 
-merge 1:1 permit year using ${my_datadir}/intermediate/permits.dta;
+merge 1:1 permit year using ${my_datadir}/intermediate/permits_${vintage_string}.dta;
 display "check5";
 replace affiliate_id=permit if affiliate_id==.;
 

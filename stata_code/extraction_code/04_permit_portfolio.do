@@ -25,7 +25,7 @@ expand 5;
 gen year=$yr_select;
 bysort permit: replace year=year-_n+1;
 
-save ${my_datadir}/intermediate/permits.dta, replace;
+save ${my_datadir}/intermediate/permits_${vintage_string}.dta, replace;
 
 
 

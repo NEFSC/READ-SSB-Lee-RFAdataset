@@ -54,7 +54,7 @@ rename ap_year year;
 rename vp_num permit;
 
 tempfile ownership;
-save ${my_datadir}/intermediate/ownership.dta, replace ;
+save ${my_datadir}/intermediate/ownership_${vintage_string}.dta, replace ;
 
 
 
