@@ -13,24 +13,23 @@ A vessel may have revenue from both commerical sources and for-hire trips.
 ****************************************/
 #delimit ; 
 
-forvalues yr=$firstyr/$yr_select {;
-	clear;
-	tempfile new2;
-	local files2 `"`files2'"`new2'" "'  ;
-	odbc load,  exec("select sum(nvl(nanglers,0)) as anglers, permit from vtr.veslog`yr't where (tripcatg between 2 and 3) and tripid in (
-select distinct tripid from vtr.veslog`yr'g where gearcode='HND')
-group by permit;") $mysole_conn;
-	gen value_permit_forhire=round(anglers*rec_exp`yr');
-	gen year=`yr';
-	save `new2';
-
-};
 clear;
-append using `files2';
-tempfile rec;
-keep permit year value_permit_forhire;
+
+odbc load,  exec("select VESSEL_PERMIT_NUM as permit, extract(YEAR FROM DATE_SAIL) as year,  sum(nvl(nanglers,0)) as anglers from NEFSC_GARFO.TRIP_REPORTS_DOCUMENT where 
+	(tripcatg between 2 and 3) and 
+	docid in (select distinct docid from NEFSC_GARFO.TRIP_REPORTS_IMAGES where GEARCODE='HND') and
+	extract(YEAR FROM DATE_SAIL) BETWEEN $firstyr and $yr_select
+	group by VESSEL_PERMIT_NUM, extract(YEAR FROM DATE_SAIL);") $myNEFSC_USERS_conn;
+
+gen rec_exp=.;
+forvalues yr = $firstyr(1)$yr_select {;
+		replace rec_exp=scalar(rec_exp`yr') if year==`yr';
+ } ;
+	
+gen value_permit_forhire=round(anglers*rec_exp);
+drop rec_exp;
 sort permit year;
-save ${my_datadir}/intermediate/recreational.dta, replace;
+save ${my_datadir}/intermediate/recreational_${vintage_string}.dta, replace;
 
 
 

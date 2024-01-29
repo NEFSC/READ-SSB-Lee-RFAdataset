@@ -1,5 +1,6 @@
 # RFAdataset
-This is a description of the data products that are produced by code in this repository.
+
+This repository contains code and metadata that is used to assemble data for analysis required by the Regulatory Flexibility Act.
 
 # Purpose
 
@@ -65,7 +66,7 @@ All revenue and value figures are in nominal terms.
 |affiliate_forhire| float| for-hire revenues for the affiliate in a year|               
 |value_permit|    float|  value of revenues, all sources, for the **permit** in a year|           
 |value_permit_forhire| float|value of for-hire revenues for the **permit** in a year|          
-|value*NNN* | float| value of commercial revenues for the **permit** in a year from NESPP3 code *NNN* |          
+|value*NNNNNN* | float| value of commercial revenues for the **permit** in a year from the ITIS_TSN code NNNNNN|          
 |person_id*Y* | int | The person_id of an owner. For a row of data, these are arranged in increasing order of person_id |          
 |PLAN_CAT | byte | =1 if a vessel held a permit of "PLAN" and "CAT", =0 otherwise |          
 
@@ -85,6 +86,8 @@ For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-20
 4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
 
 5. The YYYY-1 part of Entity_type_YYYY-1 is slightly confusing.  See §121.107 below.
+
+6. We switched over to CAMS_LAND for landings. CAMS_LAND uses ITIS TSN codes instead of NESPP3/4 codes. If you insist, you can look up the NESPP3/4 codes.
 
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
