@@ -13,9 +13,9 @@ Note2: There are some VP_NUM's that have revenue but no ownership information. T
 #delimit ; 
 clear;
 odbc load,  exec("select distinct(b.person_id), c.business_id, a.vp_num, a.ap_year
-	from permit.vps_owner@garfo_nefsc c, client.bus_own@garfo_nefsc b, permit.vps_fishery_ner@garfo_nefsc a
-		where c.ap_num in (select max(ap_num) as ap_num from permit.vps_fishery_ner@garfo_nefsc where ap_year=$yr_select group by vp_num)
-	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $mysole_conn;
+	from nefsc_garfo.permit_vps_owner c, nefsc_garfo.client_bus_own b, nefsc_garfo.permit_vps_fishery_ner a
+		where c.ap_num in (select max(ap_num) as ap_num from nefsc_garfo.permit_vps_fishery_ner where ap_year=$yr_select group by vp_num)
+	 and c.business_id=b.business_id and a.ap_num=c.ap_num;") $myNEFSC_USERS_conn;
 display "check1";
 /* get rid of business_id -- they aren't necessary to what we are doing.
 ML: I think business_id could have been omitted from the SQL select code*/
