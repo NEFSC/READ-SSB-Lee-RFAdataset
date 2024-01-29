@@ -1,5 +1,6 @@
 # RFAdataset
-This is a description of the data products that are produced by code in this repository.
+
+This repository contains code and metadata that is used to assemble data for analysis required by the Regulatory Flexibility Act.
 
 # Purpose
 
