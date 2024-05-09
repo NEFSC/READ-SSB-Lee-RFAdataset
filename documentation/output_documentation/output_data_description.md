@@ -86,6 +86,13 @@ For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-20
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
 
+# Disclosure / Confidentiality 
+The number of skate entities under 3 can be presented (i.e., 1 or 2) without violating confidentiality. 
+This was ruled by GC under Framework 12. 
+“After considering the nature of the RFA disclosure and other publicly available information on NOAA’s website, I (Mitch MacDonald – General Council) have determined for the reasons noted below that it is summary information that does not directly or indirectly identify a particular submitter’s business (i.e., that submitter A is a large fishing business).  Releasing economic information aggregated from at least three sources is the usual threshold for release.  In limited circumstances, data with less than three sources may be released in a summary form that does not directly or indirectly disclose the submitter or submitter’s business.  The skate RFA determination is a unique summary disclosure that does not reveal a submitter or submitter’s business.” 05/2024
+Reach out to GC on this for more information and reference Skate FW12 RFA section. 
+
+
 # References
 
 ## CFR Title 13, Part 121
