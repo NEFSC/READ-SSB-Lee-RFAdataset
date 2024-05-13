@@ -20,9 +20,10 @@ renvars, lower;
 compress;
 display "check3";
 
+rename value value_ ;
 
 preserve;
-collapse (sum) value, by(permit year);
+collapse (sum) value_, by(permit year);
 tempfile total;
 gen itis_tsn="ZZZZZZ";
 save `total';
@@ -30,8 +31,8 @@ restore;
 append using `total';
 
 
-reshape wide value, i(permit year) j(itis_tsn) string;
-rename valueZZZZZZ value_permit_commercial;
+reshape wide value_, i(permit year) j(itis_tsn) string;
+rename value_ZZZZZZ value_permit_commercial;
 label var value_permit_commercial "value from commercial fishing";
 save ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, replace;
 
