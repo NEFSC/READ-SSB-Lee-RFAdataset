@@ -3,7 +3,7 @@ use "${my_datadir}/final/affiliates_${vintage_string}.dta", clear;
 
 keep if year==$yr_select;
 global next_year=$yr_select+1 ;
-keep affiliate_id entity_type small_business permit value_permit value_permit_forhire ;
+keep affiliate_id entity_type small_business permit value_permit value_permit_forhire year;
 sort affiliate_id permit;
 
 
@@ -21,15 +21,16 @@ odbc exec("CREATE TABLE mlee.RFA${next_year} (
     small_business NUMBER(1),
 	permit NUMBER(6),
 	value_permit FLOAT,
-	value_permit_forhire FLOAT
+	value_permit_forhire FLOAT,
+	year NUMBER(4)
 );" ) , `oracle_no_lower';
 
 
 
-odbc insert affiliate_id entity_type_ small_business permit value_permit value_permit_forhire, table("mlee.RFA${next_year}") `oracle_no_lower' ;
+odbc insert affiliate_id entity_type_ small_business permit value_permit value_permit_forhire year, table("mlee.RFA${next_year}") `oracle_no_lower' ;
 
 /*no TMURPHY, SSTEINBA on NEFSC_USERS right now.*/
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMARES, GARDINI, GDEPIPER, JDIDDEN, JWALDEN, KBISACK, NPRADHAN, SWERNER, DCORVI, JCOUTURE, NEFMC_DAVID_MCCARRON" ) , `oracle_no_lower';
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMARES, GARDINI, GDEPIPER, JDIDDEN, JWALDEN, NPRADHAN, SWERNER, DCORVI, JCOUTURE, NEFMC_DAVID_MCCARRON" ) , `oracle_no_lower';
 
 
 /* push to the oracle on GARFO .*/
