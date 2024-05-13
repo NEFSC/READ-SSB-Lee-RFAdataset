@@ -13,7 +13,7 @@ You should think *very carefully* about using this dataset for other purposes.
 We run this code to provide data once a year, just after June 1st.  If critical bugs are found, we will fix and update.
 
 # Data storage
-Social Science Branch staff can find on the socialsci share drive at : /RFA_EO12866 Guidelines/ownership_data/.  There, you will find current data, archived data, and background information.
+Social Science Branch staff can find on the socialsci share drive at : \\nefscfile\RFA_EO12866_Guidelines\Ownership Data.  There, you will find current data, archived data, and background information.
 
 ## Data Vintages
 
@@ -24,9 +24,9 @@ I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the dat
 
 1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of July 2023, four columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE are stored on the oracle servers, you can get the 2023 data with the following query:
+1. As of July 2023, seven columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE, YEAR are stored on the oracle servers, you can get the 2023 data with the following query:
 ```
-select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE  from mlee.RFA2023@NEFSC_USERS 
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023@NEFSC_USERS 
 ```
 
 It is also available on sole
@@ -91,6 +91,14 @@ For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-20
 
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
+
+# Disclosure / Confidentiality 
+The number of skate entities under 3 can be presented (i.e., 1 or 2) without violating confidentiality. 
+This was ruled by GC under Framework 12. 
+>After considering the nature of the RFA disclosure and other publicly available information on NOAA’s website, I (Mitch MacDonald – General Council) have determined for the reasons noted below that it is summary information that does not directly or indirectly identify a particular submitter’s business (i.e., that submitter A is a large fishing business).  Releasing economic information aggregated from at least three sources is the usual threshold for release.  In limited circumstances, data with less than three sources may be released in a summary form that does not directly or indirectly disclose the submitter or submitter’s business.  The skate RFA determination is a unique summary disclosure that does not reveal a submitter or submitter’s business. (May 2024)
+
+Reach out to GC on this for more information and reference Skate FW12 RFA section. 
+
 
 # References
 
