@@ -56,7 +56,7 @@ jdbc exec("CREATE TABLE mlee.RFA${next_year} (
 
 jdbc insert affiliate_id entity_type_ small_business permit, table("mlee.RFA${next_year}") ;
 
-jdbc exec("GRANT SELECT on mlee.RFA${next_year} to DCORVI, BGALUARDI, GDEPIPER" ) , `oracle_no_lower';
+jdbc exec("GRANT SELECT on mlee.RFA${next_year} to DCORVI, BGALUARDI, GDEPIPER" ) ;
 
 
 
