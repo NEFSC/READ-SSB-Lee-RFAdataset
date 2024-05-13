@@ -48,7 +48,7 @@ We use permit and ownership data from the current year (**ap_year= YYYY**) to li
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
-The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY**. 
+The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY-1**. 
 
 All revenue and value figures are in nominal terms.
 
