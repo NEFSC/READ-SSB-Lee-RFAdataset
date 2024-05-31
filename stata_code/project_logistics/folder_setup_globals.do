@@ -74,10 +74,6 @@ scalar C2021=275.703;
 scalar C2022=296.963;
 scalar C2023=306.996;
 
-
-/* update the CPI-U for 2023*/
-/* scalar C2023=0 */
-
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 scalar rec_exp2010 = 103.56;
 scalar rec_exp2011 = 113.44;
