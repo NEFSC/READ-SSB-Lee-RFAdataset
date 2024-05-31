@@ -29,8 +29,6 @@ I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the dat
 select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023@NEFSC_USERS 
 ```
 
-It is also available on sole
-
  
 # Overview
 
