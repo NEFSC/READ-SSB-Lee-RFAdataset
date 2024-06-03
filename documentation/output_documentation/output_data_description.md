@@ -13,7 +13,7 @@ You should think *very carefully* about using this dataset for other purposes.
 We run this code to provide data once a year, just after June 1st.  If critical bugs are found, we will fix and update.
 
 # Data storage
-Social Science Branch staff can find on the socialsci share drive at : \\nefscfile\RFA_EO12866_Guidelines\Ownership Data.  There, you will find current data, archived data, and background information.
+Social Science Branch staff can find on the socialsci share drive at : \\nefscdata\RFA_EO12866_Guidelines\Ownership Data.  There, you will find current data, archived data (2010 to present), and background information.
 
 ## Data Vintages
 
