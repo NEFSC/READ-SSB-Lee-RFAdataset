@@ -1,5 +1,6 @@
 # RFAdataset
-This is a description of the data products that are produced by code in this repository.
+
+This repository contains code and metadata that is used to assemble data for analysis required by the Regulatory Flexibility Act.
 
 # Purpose
 
@@ -23,11 +24,12 @@ I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the dat
 
 1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of July 2023, four columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, and PERMIT are stored on the NEFSC oracle server, you can get the 2023 data with the following query:
+1. As of July 2023, seven columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE, YEAR are stored on the oracle servers, you can get the 2023 data with the following query:
 ```
-select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT from mlee.RFA2023@NEFSC_USERS 
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023@NEFSC_USERS 
 ```
 
+ 
 # Overview
 
 Each row contains an observation of a permit-year.  Permits are grouped together through common ownership; vessels with identical owners have the same affiliate_id.  There are three affiliate level columns: *affiliate_total*, *affiliate_fish*, and *affiliate_forhire* revenue.  These columns contain the aggregate revenue, commercial fishing revenue, and for-hire revenue for the firm.  The following table is an example:
@@ -44,7 +46,7 @@ We use permit and ownership data from the current year (**ap_year= YYYY**) to li
 
 Analysis required by the Regulatory Flexibility Act should use the Affiliate_id, year, and permit fields to correctly group fishing vessels into entities.  All other data is provided as a convenience.
 
-The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY**. 
+The firm is classified as a Commercial Fishing ("FISHING"), For-Hire ("FORHIRE"), or "NO_REV" based on the breakdown of revenues **in year YYYY-1**. 
 
 All revenue and value figures are in nominal terms.
 
@@ -62,7 +64,7 @@ All revenue and value figures are in nominal terms.
 |affiliate_forhire| float| for-hire revenues for the affiliate in a year|               
 |value_permit|    float|  value of revenues, all sources, for the **permit** in a year|           
 |value_permit_forhire| float|value of for-hire revenues for the **permit** in a year|          
-|value*NNN* | float| value of commercial revenues for the **permit** in a year from NESPP3 code *NNN* |          
+|value*NNNNNN* | float| value of commercial revenues for the **permit** in a year from the ITIS_TSN code NNNNNN|          
 |person_id*Y* | int | The person_id of an owner. For a row of data, these are arranged in increasing order of person_id |          
 |PLAN_CAT | byte | =1 if a vessel held a permit of "PLAN" and "CAT", =0 otherwise |          
 
@@ -82,6 +84,8 @@ For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-20
 4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
 
 5. The YYYY-1 part of Entity_type_YYYY-1 is slightly confusing.  See §121.107 below.
+
+6. We switched over to CAMS_LAND for landings. CAMS_LAND uses ITIS TSN codes instead of NESPP3/4 codes. If you insist, you can look up the NESPP3/4 codes.
 
 # Examples
 Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.

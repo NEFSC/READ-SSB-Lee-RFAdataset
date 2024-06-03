@@ -56,7 +56,7 @@ global permit_date_pull "'06/01/${yr_permit_portfolio}'" ;
 
  CPI-U  CUUR0000SA0
  https://data.bls.gov/timeseries/CUUR0000SA0
- No idea why I'm using -U 
+ No idea why I'm using -U
 Looks like I'm using the HALF2 numbers since at least 2014.
 */
 scalar C2010=218.056;
@@ -72,11 +72,9 @@ scalar C2019=256.903;
 scalar C2020=260.065;
 scalar C2021=275.703;
 scalar C2022=296.963;
-
+scalar C2023=306.996;
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
-
-
 scalar rec_exp2010 = 103.56;
 scalar rec_exp2011 = 113.44;
 scalar rec_exp2012 = 116.15;
@@ -87,10 +85,11 @@ scalar rec_exp2016 = 126.99;
 scalar rec_exp2017 = 129.69;
 scalar rec_exp2018 = 132.40;
 scalar rec_exp2019 = 135.11;
-/* nothing for 2020 yet, so just adjust the 2019 by CPI */
-scalar rec_exp2020=round(rec_exp2019*C2020/C2019, .01);
-scalar rec_exp2021=round(rec_exp2019*C2021/C2019, .01);
-scalar rec_exp2022=round(rec_exp2019*C2022/C2019, .01);
+scalar rec_exp2020=137.82;
+scalar rec_exp2021=140.53;
+scalar rec_exp2022=143.24;
+
+scalar rec_exp2023=round(rec_exp2022*C2023/C2022, .01);
 
 
 /* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
