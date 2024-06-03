@@ -24,9 +24,10 @@ I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the dat
 
 1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of July 2023, seven columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE, YEAR are stored on the oracle servers, you can get the 2023 data with the following query:
+1. As of June 2024, seven columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE, YEAR are stored on the NEFSC_USERS servers, you can get the 2023 and 2024 data with the following queries:
 ```
-select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023@NEFSC_USERS 
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023
+select AFFILIATE_ID, ENTITY_TYPE_2023, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2024 
 ```
 
  
