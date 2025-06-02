@@ -32,7 +32,7 @@ local oracle_no_lower: list global(myNEFSC_USERS_conn) - local(nl);
 odbc insert affiliate_id entity_type_ small_business permit value_permit value_permit_forhire year, table("mlee.RFA${next_year}") `oracle_no_lower' ;
 
 /*no TMURPHY on NEFSC_USERS right now.*/
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMARES, GARDINI, GDEPIPER, JDIDDEN, JWALDEN, NPRADHAN, SWERNER, DCORVI, JCOUTURE, NEFMC_DAVID_MCCARRON,  SSTEINBACK" ) , `oracle_no_lower';
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, GARDINI, GDEPIPER, JDIDDEN, NPRADHAN, RMURPHY, SWERNER" ) , `oracle_no_lower';
 
 
 

@@ -73,6 +73,7 @@ scalar C2020=260.065;
 scalar C2021=275.703;
 scalar C2022=296.963;
 scalar C2023=306.996;
+scalar C2024=315.233;
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 scalar rec_exp2010 = 103.56;
@@ -90,6 +91,7 @@ scalar rec_exp2021=140.53;
 scalar rec_exp2022=143.24;
 
 scalar rec_exp2023=round(rec_exp2022*C2023/C2022, .01);
+scalar rec_exp2024=round(rec_exp2022*C2024/C2022, .01);
 
 
 /* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
