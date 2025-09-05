@@ -21,6 +21,13 @@ Min-Yang has a email distribution list
 1. Take a look at the documentation folder
 1. The [NOAA Fisheries Policy directives](https://www.fisheries.noaa.gov/national/laws-and-policies/fisheries-management-policy-directives) may also be useful.  
 
+# Sample Code
+You can find sample stata code in  /stata_code/sample.  You can find Rmarkdown documents that use the RFA data at are collected in [this repository](https://github.com/NEFSC/READ-SSB-Lee-regulatory-analyses).  
+
+The [2025 Herring SIR](https://github.com/NEFSC/READ-SSB-Lee-regulatory-analyses/blob/main/Herring_SIR2025-2027/writing/SIR2025_Economic_Impacts.Rmd), starting around line 459,
+and the [2025 Black Sea Bass Specs](https://github.com/NEFSC/READ-SSB-Lee-regulatory-analyses/blob/main/BSB_Specs2025/writing/SIR2025_Economic_Impacts.Rmd), starting around line 134, are two recent examples of documents that use the RFA data directly.
+
+
 # NOAA Requirements
 This repository is a scientific product and is not official communication of the National Oceanic and Atmospheric Administration, or the United States Department of Commerce. All NOAA GitHub project code is provided on an ‘as is’ basis and the user assumes responsibility for its use. Any claims against the Department of Commerce or Department of Commerce bureaus stemming from the use of this GitHub project will be governed by all applicable Federal law. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the Department of Commerce. The Department of Commerce seal and logo, or the seal and logo of a DOC bureau, shall not be used in any manner to imply endorsement of any commercial product or activity by DOC or the United States Government.
 
