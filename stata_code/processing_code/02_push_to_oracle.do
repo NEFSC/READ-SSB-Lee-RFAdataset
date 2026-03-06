@@ -31,8 +31,8 @@ local oracle_no_lower: list global(myNEFSC_USERS_conn) - local(nl);
 
 odbc insert affiliate_id entity_type_ small_business permit value_permit value_permit_forhire year, table("mlee.RFA${next_year}") `oracle_no_lower' ;
 
-/*no TMURPHY on NEFSC_USERS right now.*/
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, GARDINI, GDEPIPER, JDIDDEN, NPRADHAN, RMURPHY, SWERNER" ) , `oracle_no_lower';
+/* GRANT privs */
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER, GARFO_NESFC" ) , `oracle_no_lower';
 
 
 
@@ -56,7 +56,7 @@ jdbc exec("CREATE TABLE mlee.RFA${next_year} (
 
 jdbc insert affiliate_id entity_type_ small_business permit, table("mlee.RFA${next_year}") ;
 
-jdbc exec("GRANT SELECT on mlee.RFA${next_year} to DCORVI, BGALUARDI, GDEPIPER" ) ;
+jdbc exec("GRANT SELECT on mlee.RFA${next_year} to BGALUARDI" ) ;
 
 
 
