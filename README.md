@@ -4,7 +4,7 @@ This repository can be found at https://github.com/NEFSC/READ-SSB-Lee-RFAdataset
 This repository holds code to assemble ownership data for RFAA analysis.  
 Please see [here](/documentation/output_documentation/output_data_description.md) for documentation on the dataset.
 
-Please see [here](https://github.com/NEFSC/READ-SSB-Lee-project-template-instructions) for some info if you want to try to run this yourself.
+Please see the [project template repository](https://github.com/NEFSC/READ-SSB-Lee-project-template/) for a few notes on getting the stata code to run. 
 
 Please help make this a valuable up-to-date resource.  Look [here](https://github.com/NEFSC/READ-SSB-Lee-WorkingEfficiently), if you'd like to contribute. 
 
