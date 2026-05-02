@@ -9,15 +9,8 @@ if strmatch("$user","minyang"){;
 global my_projdir "/home/mlee/Documents/projects/RFAdataset";
 };
 
-if strmatch("$user","minyangWin"){;
-global my_projdir "C:/Users/min-yang.lee/Documents/READ-SSB-Lee-RFAdataset";
-
-};
-
 /* setup data folder */
 global my_datadir "${my_projdir}\data_folder";
-
-
 global my_codedir "${my_projdir}\stata_code";
 
 
@@ -74,6 +67,10 @@ scalar C2021=275.703;
 scalar C2022=296.963;
 scalar C2023=306.996;
 scalar C2024=315.233;
+/* manual update needed here, giant placeholders will produce odd results, which is better than a silent fail */
+scalar C2025=1000000;
+scalar C2026=1000000;
+
 
 /* Switch over to using data from Scott for the rec expenditures.  See the the DataSet2 sheet of For-Hire_Fee.xlsx spreadsheet in the documentation*/
 scalar rec_exp2010 = 103.56;
@@ -92,11 +89,14 @@ scalar rec_exp2022=143.24;
 
 scalar rec_exp2023=round(rec_exp2022*C2023/C2022, .01);
 scalar rec_exp2024=round(rec_exp2022*C2024/C2022, .01);
+scalar rec_exp2025=round(rec_exp2022*C2025/C2022, .01);
 
 
-/* This is the 2015 size standard for Small Businesses that NMFS uses.   80FR249. Page 81194*/
+/* The 2015 size standards for Small Businesses  - 80FR249. Page 81194. Preserved here for historical interest
 global sba_comm=11000000;
 global sba_forhire=7500000;
+*/
+
 /*      84 FR 34261 changed the for-hire standard as of July 2019
 https://www.federalregister.gov/documents/2019/07/18/2019-14980/small-business-size-standards-adjustment-of-monetary-based-size-standards-for-inflation
 */
