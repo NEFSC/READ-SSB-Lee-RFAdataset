@@ -12,7 +12,7 @@ Join to the PLAN-CAT data from vps_fishery_ner
 
 /* merge commercial to for-hire */
 
-use ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, replace;
+use ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, clear;
 merge 1:1 permit year using  ${my_datadir}/intermediate/recreational_${vintage_string}.dta;
 drop _merge;
 
@@ -246,6 +246,8 @@ cap drop counter;
 cap drop affiliate_counter;
 
 sort affiliate_id year permit;
+/* add a few plans to local myplans if you want to export indicators variables */
+local myplans ;
 
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
