@@ -16,6 +16,11 @@ erase ${my_datadir}/intermediate/permits.dta
 erase ${my_datadir}/intermediate/recreational.dta
 */
 
+
+
+global firstyr= $yr_select-4
+
+
 do "${my_codedir}/extraction_code/01_extract_ownership.do"
 do "${my_codedir}/extraction_code/02_commercial_revenues.do"
 do "${my_codedir}/extraction_code/03_for_hire_revenues.do"

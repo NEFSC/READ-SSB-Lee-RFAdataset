@@ -3,8 +3,6 @@
 ***************************************************/
 #delimit ; 
 
-global firstyr= $yr_select-4;
-
 	clear;
 
 /* Pull data from CAMS, group by permit, year and species */
