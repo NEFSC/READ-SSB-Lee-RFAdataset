@@ -41,9 +41,8 @@ replace person_id1=99000000+vp_num if person_id1==.;
 assert person_id1<.;
 egen affiliate_id=group(person_id*), missing;
 order affiliate_id ap_year vp_num;
-sort affiliate_id ap_year vp_num;
 
-sort affiliate vp_num ap_year;
+sort affiliate_id vp_num ap_year;
 
 /* it should be impossible for a vp_num to have 2 affiliate_id's in a year.  Check this and break the program if there are vp_nums with 2 affiliated_ids. */
 duplicates tag vp_num affiliate_id ap_year, gen(mytt9);
