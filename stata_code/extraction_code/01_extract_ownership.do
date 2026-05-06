@@ -52,7 +52,6 @@ drop mytt9;
 rename ap_year year;
 rename vp_num permit;
 
-tempfile ownership;
 save ${my_datadir}/intermediate/ownership_${vintage_string}.dta, replace ;
 
 
