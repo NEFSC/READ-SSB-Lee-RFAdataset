@@ -1,7 +1,7 @@
 
 /* Min-Yang.Lee@noaa.gov */
 
-/* Objective: This wrapper code is used to pull data to build the "RFA" dataset. It does 6 things:
+/* Objective: This wrapper code is used to pull data to build the "RFA" dataset. It does a few things:
 1.  Construct Affiliates
 2.  Revenues:
 	a. Pull out landings from CFDBS  from the last 5 years.
@@ -18,6 +18,8 @@ erase ${my_datadir}/intermediate/recreational.dta
 
 
 
+/* before you can run this, you should modify the "project_logistics/folder_setup_globals.do" file appropriately and run it */
+
 global firstyr= $yr_select-4
 
 
@@ -27,6 +29,7 @@ do "${my_codedir}/extraction_code/03_for_hire_revenues.do"
 do "${my_codedir}/extraction_code/04_permit_portfolio.do"
 
 
+do "${my_codedir}/processing_code/data_joins.do"
 
 
 
