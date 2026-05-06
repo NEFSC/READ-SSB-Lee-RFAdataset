@@ -18,7 +18,7 @@ drop plan cat;
 /* there's a few 'duplicated' entries */
 duplicates drop;
 gen ppp=1;
-reshape wide ppp, i(vp) j(plancat) string;
+reshape wide ppp, i(vp_num) j(plancat) string;
 rename vp_num permit;
 sort permit;
 tempfile perms;

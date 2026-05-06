@@ -112,7 +112,7 @@ bysort affiliate_id year: egen affiliate_total=sum(value_permit);
 bysort affiliate_id year: egen affiliate_fish=sum(value_permit_commercial);
 bysort affiliate_id year: egen affiliate_forhire=sum(value_permit_forhire);
 
-order affiliate_t affiliate_f*, after(year);
+order affiliate_total affiliate_f*, after(year);
 
 format affiliate* value* %16.0gc;
 sort permit year;
@@ -157,14 +157,14 @@ display "check7";
 
 sort affiliate_id year permit;
 drop value_permit_commercial;
-order affiliate_id year entity_type small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*;
+order affiliate_id year entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*;
 quietly compress;
 display "check8";
 
 /* logic check: was everything classified properly?*/
 gen check=0;
-replace check=1 if strmatch(entity,"FISHING")==1 & small==1 & affiliate_bar>$sba_comm;
-replace check=1 if strmatch(entity,"FORHIRE")==1 & small==1 & affiliate_bar>$sba_forhire;
+replace check=1 if strmatch(entity_type_$yr_select,"FISHING")==1 & small_business==1 & affiliate_bar>$sba_comm;
+replace check=1 if strmatch(entity_type_$yr_select,"FORHIRE")==1 & small_business==1 & affiliate_bar>$sba_forhire;
 assert check==0;
 drop check;
 drop affiliate_bar;
@@ -246,14 +246,14 @@ cap drop counter;
 cap drop affiliate_counter;
 
 sort affiliate_id year permit;
-/* add a few plans to local myplans if you want to export indicators variables */
+/* add a few plans to local myplans if you want to export any indicator variables */
 local myplans ;
 
 export excel affiliate_id year count_permits entity_type_$yr_select small_business permit affiliate_total affiliate_fish affiliate_forhire value_permit*  `myplans' using  "${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx", firstrow(variables) replace;
 export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firstrow(variables) replace;
 
 
-saveold "${my_datadir}/final/affiliates_${vintage_string}.dta", replace version(12);
+save "${my_datadir}/final/affiliates_${vintage_string}.dta", replace;
 
 /* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets*/
 
