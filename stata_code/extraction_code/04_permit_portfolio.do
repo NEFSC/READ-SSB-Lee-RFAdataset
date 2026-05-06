@@ -12,7 +12,8 @@ clear;
 
 
 
-gen str6 plancat=plan+"_"+cat;
+gen str10 plancat=plan+"_"+cat;
+compress plancat;
 drop plan cat;
 /* there's a few 'duplicated' entries */
 duplicates drop;
