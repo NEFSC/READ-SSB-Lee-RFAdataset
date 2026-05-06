@@ -68,7 +68,7 @@ scalar C2022=296.963;
 scalar C2023=306.996;
 scalar C2024=315.233;
 /* manual update needed here, giant placeholders will produce odd results, which is better than a silent fail */
-scalar C2025=1000000;
+scalar C2025=324;
 scalar C2026=1000000;
 
 
