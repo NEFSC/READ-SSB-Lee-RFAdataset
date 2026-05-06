@@ -5,8 +5,8 @@ scalar drop _all
 
 #delimit ;
 
-if strmatch("$user","minyang"){;
-global my_projdir "/home/mlee/Documents/projects/RFAdataset";
+if strmatch("$user","minyangWin"){;
+global my_projdir "C:/Users/min-yang.lee/Documents/READ-SSB-Lee-RFAdataset";
 };
 
 /* setup data folder */
