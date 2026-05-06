@@ -92,8 +92,9 @@ scalar rec_exp2024=round(rec_exp2022*C2024/C2022, .01);
 scalar rec_exp2025=round(rec_exp2022*C2025/C2022, .01);
 
 
-/* The 2015 size standards for Small Businesses  - 80FR249. Page 81194. Preserved here for historical interest
 global sba_comm=11000000;
+
+/* The 2015 size standards for Small Businesses  - 80FR249. Page 81194. Preserved here for historical interest
 global sba_forhire=7500000;
 */
 
