@@ -12,6 +12,16 @@ You should think *very carefully* about using this dataset for other purposes.
 
 We run this code to provide data once a year, just after June 1st.  If critical bugs are found, we will fix and update.
 
+# Pipeline implementations
+
+In 2026, the dataset is produced by two parallel pipelines maintained in this repository:
+
+- **Stata pipeline** (`stata_code/`): the original implementation. Produces `.dta` and `.xlsx`; historically also `.sas7bdat` and `.Rdata` (via Stat/Transfer).
+- **R pipeline** (`R_code/`): a tidyverse port of the Stata pipeline. Produces `.Rds` natively. See `documentation/stata-to-R-porting-report.md` for cross-pipeline verification. We have tested the code with a verfication script and plan to discontinue stata at the end of the 2026 development cycle. We will use use ``haven`` to produce stata dta files.
+
+Both pipelines read the same Oracle source tables and produce equivalent outputs at the affiliate-permit-year level.
+
+
 # Data storage
 Social Science Branch staff can find on the socialsci share drive at : ``\\nefscdata\RFA_EO12866_Guidelines\Ownership Data``.  There, you will find current data, archived data (2010 to present), and background information.
 
@@ -19,15 +29,30 @@ Social Science Branch staff can find on the socialsci share drive at : ``\\nefsc
 
 I use the suffix ``_YYYY_MM_DD`` to denote the Year, Month, and Day that the data was extracted and processed.
 
+Runs executed before the June 1 permit cutoff are tagged ``PROTOTYPE_YYYY_MM_DD`` to flag preliminary data; the regular June (or later) run replaces these.
+
 
 ##  Filenames
 
-1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  This is provided in four formats: stata12, excel, Rdata, and sas7bdat formats.
+1. affiliates_YYYY_MM_DD - full dataset, containing affiliated IDs, permit numbers, total revenue, and revenue by species, extracted on YYYY, MM, DD.  Provided in `.dta` (Stata pipeline) and `.Rds` (R pipeline) formats. We will also provide SAS (sas7bdat) and excel formats.
 1. affiliates_condensed_YYYY_MM_DD.xlsx - a smaller dataset that does *not* contain revenue by species.
-1. As of June 2024, seven columns: AFFILIATE_ID, ENTITY_TYPE_YYYY, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, and VALUE_PERMIT_FORHIRE, YEAR are stored on the NEFSC_USERS servers, you can get the 2023 and 2024 data with the following queries:
+1. A subset of the dataset is published to Oracle on the NEFSC_USERS server. Tables follow the naming pattern `mlee.RFA{run_year}`, where `run_year` is the calendar year of the June run; the `ENTITY_TYPE_{yr_select}` column refers to the most recently completed revenue year (`run_year − 1` for the post-June 1 run). Seven columns are stored:
+
+   | Column | Oracle type |
+   |---|---|
+   | AFFILIATE_ID            | NUMBER(8)         |
+   | ENTITY_TYPE_*yr_select* | VARCHAR2(8 CHAR)  |
+   | SMALL_BUSINESS          | NUMBER(1)         |
+   | PERMIT                  | NUMBER(6)         |
+   | VALUE_PERMIT            | FLOAT             |
+   | VALUE_PERMIT_FORHIRE    | FLOAT             |
+   | YEAR                    | NUMBER(4)         |
+
+   Example queries (the most recent table is the highest-numbered `mlee.RFA{run_year}`):
 ```
-select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2023
-select AFFILIATE_ID, ENTITY_TYPE_2023, SMALL_BUSINESS, PERMIT,VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR  from mlee.RFA2024 
+select AFFILIATE_ID, ENTITY_TYPE_2022, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR from mlee.RFA2023
+select AFFILIATE_ID, ENTITY_TYPE_2023, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR from mlee.RFA2024
+select AFFILIATE_ID, ENTITY_TYPE_2024, SMALL_BUSINESS, PERMIT, VALUE_PERMIT, VALUE_PERMIT_FORHIRE, YEAR from mlee.RFA2025
 ```
 
  
@@ -54,20 +79,23 @@ All revenue and value figures are in nominal terms.
 
 | Column | Type | Definition |  
 |---|---|---|
-|affiliate_id|    float|   Key that identifies an entity in this dataset. Not consistent across data vintages. See Warning 3 below. | 
+|affiliate_id|    integer (R) / float (Stata) |   Key that identifies an entity in this dataset. Not consistent across data vintages. See Warning 4 below. | 
 |year|            int |   Calendar year corresponding to revenue and value columns.  | 
 |count_permits|   byte |  Number of distinct permits owned by an entity in year YYYY.|               
-|entity_type_*YYYY-1* | string7| The type of entity ("FISHING", "FORHIRE", "NO_REV") based on the source majority of revenues in the previous year. If a firm had zero revenues in year YYYY-1, then it is classified as "NO_REV"|                 
+|entity_type_*YYYY-1* | string7| The type of entity ("FISHING", "FORHIRE", "NO_REV") based on the source majority of revenues in the most recently completed revenue year (`yr_select`). If a firm had zero revenues in year `yr_select`, then it is classified as "NO_REV". For post-June 1 runs, `yr_select = run_year − 1`; for PROTOTYPE (pre-June 1) runs, `yr_select = run_year − 2`.|                 
 |small_business|  byte |  =1 if a firms is a small business, =0 otherwise.|             
 |permit|          long|   permit number | 
 |affiliate_total| float|  total revenues for the affiliate in a year |           
 |affiliate_fish|  float|  commercial fishing revenues for the affiliate in a year |              
 |affiliate_forhire| float| for-hire revenues for the affiliate in a year|               
 |value_permit|    float|  value of revenues, all sources, for the **permit** in a year|           
-|value_permit_forhire| float|value of for-hire revenues for the **permit** in a year|          
+|value_permit_forhire| float|value of for-hire revenues for the **permit** in a year. Note: `value_permit = sum(value*NNNNNN*) + value_permit_forhire`.|          
+|anglers | int | Estimated number of anglers carried by the **permit** in a year (from VTR), used to compute `value_permit_forhire`. |
 |value*NNNNNN* | float| value of commercial revenues for the **permit** in a year from the ITIS_TSN code NNNNNN|          
 |person_id*Y* | int | The person_id of an owner. For a row of data, these are arranged in increasing order of person_id |          
-|PLAN_CAT | byte | =1 if a vessel held a permit of "PLAN" and "CAT", =0 otherwise |          
+|*PLAN*_*CAT* | byte | =1 if the **permit** was held in plan *PLAN* and category *CAT* on June 1 of the run year, =0 otherwise. One column per plan-category combination present in the dataset. |          
+
+PLAN prefixes observed in the dataset: BLU, BSB, DOG, FLS, HMS, HRG, LGC, LO, MNK, MUL, OQ, RCB, SCP, SC, SF, SKT, SMB, TLF. The CAT suffix is the regulatory category code as published by GARFO; see `R_code/extraction_code/04_permit_portfolio.R` for the source query.
 
 # Warnings
 1. Do not sum the affiliate revenue variables.  You will not get the total revenues.  If you want aggregate revenues for a fleet, you should either:
@@ -80,16 +108,16 @@ For example, the fact that permits 123 and 456 were affiliated in 2013, does not
 3.  Once a group of permits is affiliated together, revenues for the trailing 5 years are combined and aggregated.  
 For example, if permits 123 and 456 were affiliated in 2022 but not from 2017-2021, the revenues for 123 and 456 across the 2017-2021 period averaged when making a SBA size determination.  This is consistent with current SBA guidance.
 
-3. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2021, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2022.  This is probably fine for RFA purposes.
+4. When the dataset is generated for subsequent years, the affiliate id variables will change.  For example if permits 123 and 456 were affiliate_id =3 in 2021, that same grouping (if it even exists) is likely to have a different value of affiliate_id in 2022.  This is probably fine for RFA purposes.
 
-4.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
+5.  If a business is owned by another business, you won't see the people in the company in bus_own. The people in this situation are one or more levels below the first owner record and thus don't show up in bus_own. We don't have many businesses like this, but there are few. This means that the dataset does not combine as many firms as it should. Therefore, there are probably more firms and small firms that in reality.
 
-5. The YYYY-1 part of Entity_type_YYYY-1 is slightly confusing.  See §121.107 below.
+6. Entities are classified using receipts from the previous fiscal year, per §121.107 (primary-industry determination). The `YYYY-1` suffix in `entity_type_YYYY-1` reflects the source revenue year (`yr_select`), not the run year.
 
-6. We switched over to CAMS_LAND for landings. CAMS_LAND uses ITIS TSN codes instead of NESPP3/4 codes. If you insist, you can look up the NESPP3/4 codes.
+7. We switched over to CAMS_LAND for landings. CAMS_LAND uses ITIS TSN codes instead of NESPP3/4 codes. If you insist, you can look up the NESPP3/4 codes.
 
 # Examples
-Please see the subfolder in "stata_code" for a few stata code samples.  You're on your own for SAS or R.
+Please see the subfolders in `stata_code/` for Stata code samples and `R_code/` for the R port (extraction, joins, Oracle push, and verification scripts).
 
 # Disclosure / Confidentiality 
 The number of skate entities under 3 can be presented (i.e., 1 or 2) without violating confidentiality. 
