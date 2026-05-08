@@ -1,14 +1,69 @@
+/*
+================================================================================
+Script:      data_joins.do
+Repository:  READ-SSB-Lee-RFAdataset
+--------------------------------------------------------------------------------
+Purpose:
+  Central processing script. Merges commercial revenues, for-hire revenues,
+  ownership, and permit portfolio data into a single balanced panel dataset.
+  Fills in missing affiliate IDs, constructs affiliate-level revenue aggregates,
+  classifies entities by industry type (FISHING/FORHIRE/NO_REV), determines
+  small/large business status using 5-year average revenues vs. SBA thresholds,
+  validates the output with assertion checks, and exports the final dataset in
+  five formats.
 
-/* Min-Yang.Lee@noaa.gov */
+Pipeline Position:
+  Step 1e of the pipeline — central processing.
 
-/* Objective: This code is used to
+Inputs:
+  - ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta
+  - ${my_datadir}/intermediate/recreational_${vintage_string}.dta
+  - ${my_datadir}/intermediate/ownership_${vintage_string}.dta
+  - ${my_datadir}/intermediate/permits_${vintage_string}.dta
 
-Join revenues data to affiliates (ownership data).
-Join to the PLAN-CAT data from vps_fishery_ner
+Outputs:
+  - ${my_datadir}/final/affiliates_condensed_${vintage_string}.xlsx
+  - ${my_datadir}/final/affiliates_${vintage_string}.xlsx
+  - ${my_datadir}/final/affiliates_${vintage_string}.dta
+  - ${my_datadir}/final/affiliates_${vintage_string}.sas7bdat  (via Stat/Transfer)
+  - ${my_datadir}/final/affiliates_${vintage_string}.Rdata     (via Stat/Transfer)
 
+Key Macros Required:
+  - $my_datadir, $vintage_string, $yr_select
+  - $sba_forhire : for-hire SBA threshold (set by folder_setup_globals.do)
+  - $sba_comm    : commercial SBA threshold — NOTE: this is commented out in
+                   folder_setup_globals.do and may be undefined. Verify before run.
+  - $this_month  : for the preliminary-data warning
+  - $stattransfer : path to Stat/Transfer executable; SAS/R exports silently
+                    fail if undefined
+
+SQL Connections:
+  None
+
+Notes:
+  - Two pause; commands (lines 81 and 190) halt execution in interactive Stata
+    and will freeze batch/non-interactive runs indefinitely. You can just set pause off.
+  - $stattransfer shell calls use !, which does not propagate OS-level errors
+    back to Stata. If Stat/Transfer is absent, SAS and R files are silently
+    not created.
+  - local myplans is defined as empty. To include permit category indicators in
+    the condensed export, add variable names (e.g., "HRG_A HRG_B") to that local.
+
+================================================================================
 */
-#delimit ; 
 
+#delimit ;
+
+
+
+/*---------------------------------------------------------------------------
+ SECTION: Merge Commercial and For-Hire Revenues
+ Starts with the commercial revenue dataset (wide, one row per permit-year).
+ Merges in for-hire revenue 1:1 on permit and year year. _merge is dropped because
+ unmatched rows on both sides are legitimate: commercial-only permits have no
+ for-hire record and vice versa. Revenue zeros are filled in later.
+---------------------------------------------------------------------------
+*/
 
 /* merge commercial to for-hire */
 
@@ -16,16 +71,34 @@ use ${my_datadir}/intermediate/commercial_revenues_${vintage_string}.dta, clear;
 merge 1:1 permit year using  ${my_datadir}/intermediate/recreational_${vintage_string}.dta;
 drop _merge;
 
+/*---------------------------------------------------------------------------
+ SECTION: Merge Ownership
+ Merges affiliate_id from the ownership dataset m:1 on permit (not permit-year)
+ because the ownership data holds only $yr_select ownership.
+
+_merge=2 indicates there was a firm in the $yr_select that did not have any revenues.
+We need to keep these in the dataset
+---------------------------------------------------------------------------
+*/
+
 /*3. Join revenues data to affiliates (ownership data). */
 merge m:1 permit using ${my_datadir}/intermediate/ownership_${vintage_string}.dta;
 
 
 
+/* SECTION: Panel Balancing and Ownership Gap Fill
+ tsset/tsfill creates a fully balanced panel across all permit-year combinations.
+ Newly created rows from tsfill have missing ownership variables; the foreach
+ and bysort blocks propagate the nearest known values within each permit's
+ time series. _merge from the ownership step is retained temporarily to
+ flag permits with no ownership records at all.
+---------------------------------------------------------------------------
+*/
 
 
 
 /*
-I need to fill the affiliate_id for any semi-matches.  These are 
+I need to fill the affiliate_id for any semi-matches.  These are
 Permits that only show up once
 	These are difficult, because they could have 1-2 years of revenue and may not be active in the most recent year
 */
@@ -33,6 +106,8 @@ tsset permit year;
 tsfill, full;
 
 sort permit (affiliate_id);
+
+// Propagate person_id values to tsfill-created rows within each permit.
 
 foreach var of varlist person_id*{;
 	bysort permit (affiliate_id) : replace `var'=`var'[1] if `var'==. & affiliate_id==.;
@@ -49,16 +124,26 @@ _merge==3. There is a match between affiliation and revenue dataset.  Nothing to
 */
 
 display "check5";
+* Permits with no ownership match use the permit number as their affiliate_id,
+* ensuring each is a unique singleton affiliation rather than grouped with others.
 replace affiliate_id=permit if sum_any_miss>=1;
 drop _merge sum_any_miss any_miss;
 
-
+/*---------------------------------------------------------------------------
+ SECTION: Merge Permit Portfolio
+ Merges in plan-category indicators 1:1 on permit-year. Permits with no
+ revenue or ownership but with a valid federal permit appear only in this
+ dataset (_merge==2) and receive affiliate_id=permit.
+ Missing permit category indicators and revenue variables are filled with 0
+ after the merge.
+---------------------------------------------------------------------------
+*/
 
 /* join permit data back to dataset. There are apparently some permits with no ownership info or landings, but permits.  */
 
 merge 1:1 permit year using ${my_datadir}/intermediate/permits_${vintage_string}.dta;
 display "check5";
-replace affiliate_id=permit if affiliate_id==.;
+replace affiliate_id=permit if affiliate_id==.; // permits with no revenue or ownership get singleton affiliations
 
 
 
@@ -67,18 +152,27 @@ replace affiliate_id=permit if affiliate_id==.;
 	There are also federal permits with no revenues (_merge=2).
 
 	This is fixed at checkpoint 101.
-	*/
 
+ppp_* are permit category indicators: 0 means the permit was not held in that plan-category.
+*/
 quietly foreach var of varlist ppp* {;
 	replace `var'=0 if `var'==.;
 };
 
-/* fill in zeros for missing values of revenue */
+/* Revenue zeros: permits with no commercial or for-hire activity in a year have value=0.
+ fill in zeros for missing values of revenue */
 quietly foreach var of varlist value* {;
 	replace `var'=0 if `var'==.;
 };
 
 pause;
+/*---------------------------------------------------------------------------
+SECTION: Affiliate-Level Revenue Aggregation
+ Constructs affiliate-level totals by summing across all permits in each
+ affiliate-year group. For single-permit affiliates the affiliate variables
+ equal the permit variables. Checks first that no permit has two affiliate_ids.
+---------------------------------------------------------------------------
+*/
 
 
 /* 4.  Construct Affiliate level gross revenues, gross revenues by "category", and make a determination of "SMALL" and "LARGE" */
@@ -91,11 +185,19 @@ assert `mytt'==0;
 
 gen value_permit=value_permit_commercial+value_permit_forhire;
 
+/*---------------------------------------------------------------------------
+ SECTION: Affiliate ID Gap Fill
+ Three-pass propagation handles permits whose affiliate_id is missing for some
+ years: last-known propagated backward, first-known forward, second-position
+ as tiebreaker. Final fallback uses permit number.
+---------------------------------------------------------------------------
+*/
+
 /* fill in missing affiliate_ids : last, first, middle */
-bysort permit (year): replace affiliate_id=affiliate_id[_N] if affiliate_id==.;
-bysort permit (year): replace affiliate_id=affiliate_id[1] if affiliate_id==.;
-bysort permit (year): replace affiliate_id=affiliate_id[2] if affiliate_id==.;
-replace affiliate_id=permit if affiliate_id==.;
+bysort permit (year): replace affiliate_id=affiliate_id[_N] if affiliate_id==.; // last known value → backward fill
+bysort permit (year): replace affiliate_id=affiliate_id[1] if affiliate_id==.;  // first known value → forward fill
+bysort permit (year): replace affiliate_id=affiliate_id[2] if affiliate_id==.;  // second position as tiebreaker
+replace affiliate_id=permit if affiliate_id==.;                                  // final fallback
 assert affiliate_id~=.;
 
 
@@ -117,6 +219,15 @@ order affiliate_total affiliate_f*, after(year);
 format affiliate* value* %16.0gc;
 sort permit year;
 
+/*---------------------------------------------------------------------------
+ SECTION: Entity Type Classification
+ Classifies each affiliate as FORHIRE (for-hire revenue >= commercial),
+ FISHING (commercial revenue > for-hire), or NO_REV (both zero).
+ Classification is first assigned to all years using each year's revenue, then
+ overwritten with the $yr_select value and propagated backward, so entity_type
+ is constant across all panel years for each affiliate.
+---------------------------------------------------------------------------
+*/
 
 display "check6";
 /* Classify entities based on revenues
@@ -128,11 +239,19 @@ replace entity_type_$yr_select="FISHING" if affiliate_fish>affiliate_forhire;
 replace entity_type_$yr_select="NO_REV" if affiliate_fish==0 & affiliate_forhire==0;
 replace entity_type_$yr_select="" if year~=$yr_select;
 bysort affiliate_id (year): replace entity_type_$yr_select=entity_type_$yr_select[_N] if strmatch(entity_type_$yr_select,"");
+// Propagates the current-year classification to all prior years in the panel.
 /*ensure all entities are classified*/
 assert strmatch(entity_type_$yr_select,"")==0;
 
-/* classify affiliate_id as small or large based on 5-year average of TOTAL revenues. Use the appropriate size standard.
+/*---------------------------------------------------------------------------
+ SECTION: Small/Large Business Classification
+ Computes 5-year average revenue per affiliate, weighting by permit count to
+ avoid double-counting multi-permit affiliates. Applies the SBA threshold
+ appropriate to the entity's type. small_business=1 (small), =0 (large).
+---------------------------------------------------------------------------
 */
+
+
 clonevar value_dum=value_permit;
 
 
@@ -188,17 +307,35 @@ assert scalar(NN)~=0;
 
 
 pause;
+/*---------------------------------------------------------------------------
+ SECTION: Permit Category Cleanup
+ Fills any remaining missing ppp_* indicators with 0. Removes variable labels
+ (uninformative at this stage). Strips the 3-character "ppp" prefix from all
+ ppp_* variable names, leaving HRG_A, BSB_1, etc. in the final dataset.
+---------------------------------------------------------------------------
+*/
 
 quietly foreach var of varlist ppp*{;
 	replace `var'=0 if `var'==.;
 	label var `var' ;
 };
-renvars ppp*, predrop(3);
+renvars ppp*, predrop(3); // strips the "ppp" prefix (3 chars); ppp_HRG_A becomes HRG_A
 
 
 
 
 display "check9";
+
+/*---------------------------------------------------------------------------
+ SECTION: Permit Count and Panel Balance Assertions
+ Generates count_permits per affiliate-year and verifies it is constant within
+ each affiliate (a permit should not disappear from an affiliate mid-panel).
+ The plan-category SD check verifies that each permit's category indicators
+ do not vary across years (they are a snapshot and should be constant in this
+ panel structure). The hard-coded plan prefixes cover all currently known NMFS
+ plan categories; add new prefixes if the permit system expands.
+---------------------------------------------------------------------------
+*/
 
 /*generate a variable that contains the count of distinct permits for each affiliate */
 bysort affiliate_id year: gen count_permits=_N;
@@ -208,6 +345,7 @@ assert diff==0;
 drop diff;
 
 
+/* HARD-CODED: plan-category prefixes; would be better to get them from the data? Or from the valid_fishery table. */
 foreach var of varlist BLU_* BSB_* DOG_* FLS_* HMS_* HRG_* LGC_* LO_* MNK_* MUL_* OQ_* RCB_* SCP_* SC_* SF_* SKT_* SMB_* TLF_* {;
 	bysort permit: egen problem_`var'=sd(`var');
 	qui summ problem_`var';
@@ -245,6 +383,16 @@ cap drop _merge;
 cap drop counter;
 cap drop affiliate_counter;
 
+/* ----------------------------------------------------------------------------
+ SECTION: Export Final Dataset
+ Condensed Excel export: a subset of columns; `myplans' is currently empty.
+   To include permit category indicators (e.g., HRG_A HRG_B), add their names
+   to the local myplans definition below.
+ Full Excel export: all columns.
+ Stata .dta: saveold version(12) for backward compatibility.
+ SAS/R exports via Stat/Transfer: silent failure if $stattransfer is undefined.
+ ----------------------------------------------------------------------------
+*/
 sort affiliate_id year permit;
 /* add a few plans to local myplans if you want to export any indicator variables */
 local myplans ;
@@ -255,8 +403,10 @@ export excel using "${my_datadir}/final/affiliates_${vintage_string}.xlsx", firs
 
 save "${my_datadir}/final/affiliates_${vintage_string}.dta", replace;
 
-/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets*/
-
+/* if your system is aware of stat-transfer, this will automatically create sas and Rdata datasets
+WARNING: ! does not propagate OS errors to Stata. If $stattransfer is
+ undefined or not installed, these files are silently not created.
+*/
 ! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.sas7bdat" -y;
 ! "$stattransfer" "${my_datadir}/final/affiliates_${vintage_string}.dta"  "${my_datadir}/final/affiliates_${vintage_string}.Rdata" -y;
 
