@@ -23,7 +23,8 @@
 #
 # Oracle Connections Required:
 #   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#
+#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
+#              dbname = <the tns to the production oracle database>)
 # Globals → R Config:
 #   - $yr_select       → yr_select      : analysis year
 #   - $myNEFSC_USERS_conn → dsn_nefsc_users : ODBC DSN name

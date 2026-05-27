@@ -22,6 +22,8 @@
 #
 # Oracle Connections Required:
 #   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
+#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
+#              dbname = <the tns to the production oracle database>)
 #
 # Globals → R Config:
 #   - $permit_date_pull  → permit_date_pull : date string '06/01/YYYY' for SQL
