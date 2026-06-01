@@ -63,6 +63,9 @@ library(here)
 here::i_am("R_code/processing_code/02_push_to_oracle.R")
 
 source(here("R_code", "project_logistics","_config.R"))
+drv       <- dbDriver("Oracle")
+
+con<-eval(nefscdb_con)
 
 next_year  <- yr_select + 1L
 entity_col <- glue("entity_type_{yr_select}")
@@ -80,7 +83,7 @@ df_push <- affiliates %>%
   filter(year == yr_select) %>%
   select(affiliate_id, all_of(entity_col), small_business,
          permit, value_permit, value_permit_forhire, year) %>%
-  rename(permit_year = year)%>%
+#  rename(permit_year = year)%>%
   arrange(affiliate_id, permit)
 names(df_push) <- toupper(names(df_push))
 
@@ -121,7 +124,7 @@ create_sql <- glue("
     PERMIT                 NUMBER(6),
     VALUE_PERMIT           FLOAT,
     VALUE_PERMIT_FORHIRE   FLOAT,
-    PERMIT_YEAR             NUMBER(4)
+    YEAR             NUMBER(4)
   )
 ")
 
@@ -151,7 +154,7 @@ message("Inserted ", nrow(df_push), " rows into mlee.", table_name)
 
 grant_sql <- glue::glue("
   GRANT SELECT ON mlee.{table_name}
-  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER
+  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER,GARFO_NESFC
 ")
 
 DBI::dbExecute(con, grant_sql)
