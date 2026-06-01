@@ -51,13 +51,13 @@ use "${my_datadir}/final/affiliates_${vintage_string}.dta", clear;
 
 keep if year==$yr_select;
 global next_year=$yr_select+1 ;
-keep affiliate_id entity_type small_business permit value_permit value_permit_forhire year;
+keep affiliate_id entity_type_$yr_select small_business permit value_permit value_permit_forhire year;
 sort affiliate_id permit;
 
 
 
 local nl "lower";
-local oracle_no_lower: list global(mynova_conn) - local(nl);
+local oracle_no_lower: list global(myNEFSC_USERS_conn) - local(nl);
 /* SQL QUERY — DSN: $mynova_conn (via oracle_no_lower)
  Purpose: Drop the prior table for this year if it already exists.
  Tables:  mlee.RFA${next_year}
@@ -99,10 +99,10 @@ local oracle_no_lower: list global(myNEFSC_USERS_conn) - local(nl);
 		  */
 		  
 		  
-odbc insert affiliate_id entity_type_ small_business permit value_permit value_permit_forhire year, table("mlee.RFA${next_year}") `oracle_no_lower' ;
+odbc insert affiliate_id entity_type_$yr_select small_business permit value_permit value_permit_forhire year, table("mlee.RFA${next_year}") `oracle_no_lower' ;
 
 /* GRANT select  */
-odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER, GARFO_NESFC" ) , `oracle_no_lower';
+odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER" ) , `oracle_no_lower';
 
 
 
@@ -124,7 +124,7 @@ jdbc exec("CREATE TABLE mlee.RFA${next_year} (
 )" );
 
 
-jdbc insert affiliate_id entity_type_ small_business permit, table("mlee.RFA${next_year}") ;
+jdbc insert affiliate_id entity_type_$yr_select small_business permit, table("mlee.RFA${next_year}") ;
 
 jdbc exec("GRANT SELECT on mlee.RFA${next_year} to BGALUARDI" ) ;
 
