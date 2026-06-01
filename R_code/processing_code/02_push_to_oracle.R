@@ -55,28 +55,34 @@
 
 library(tidyverse)
 library(DBI)
-library(odbc)
+library(ROracle)
 library(glue)
 library(fs)
+library(here)
 
-source(file.path(my_codedir, "_config.R"))
+here::i_am("R_code/processing_code/02_push_to_oracle.R")
+
+source(here("R_code", "project_logistics","_config.R"))
 
 next_year  <- yr_select + 1L
-entity_col <- paste0("entity_type_", yr_select)
-table_name <- paste0("RFA", next_year)
+entity_col <- glue("entity_type_{yr_select}")
+table_name <- glue("RFA{next_year}")
+entity_upper <- glue("ENTITY_TYPE_{yr_select}")
 
 # ------------------------------------------------------------------------------
 # Load final dataset, filter to current year, select columns for Oracle push
 # ------------------------------------------------------------------------------
 
-affiliates <- readRDS(fs::path(my_datadir, "final",
+affiliates <- readRDS(here("data_folder", "final",
                                paste0("affiliates_", vintage_string, ".Rds")))
 
 df_push <- affiliates %>%
   filter(year == yr_select) %>%
   select(affiliate_id, all_of(entity_col), small_business,
          permit, value_permit, value_permit_forhire, year) %>%
+  rename(permit_year = year)%>%
   arrange(affiliate_id, permit)
+names(df_push) <- toupper(names(df_push))
 
 message("Rows to push: ", nrow(df_push))
 
@@ -85,21 +91,17 @@ message("Rows to push: ", nrow(df_push))
 # In Stata, mynova_conn was used for DDL; myNEFSC_USERS_conn for INSERT.
 # Both are the same physical server. One DBI connection handles both in R.
 # ------------------------------------------------------------------------------
-
-con <- DBI::dbConnect(
-  odbc::odbc(),
-  dsn = dsn_nova,                        # HARD-CODED: "nova"
-  uid = Sys.getenv("ORACLE_UID"),
-  pwd = Sys.getenv("ORACLE_PWD")
-)
+con<-eval(nefscdb_con)
 
 # ------------------------------------------------------------------------------
 # DROP existing table (capture failure if table doesn't exist)
 # Stata: capture odbc exec("DROP TABLE mlee.RFA${next_year}")
 # ------------------------------------------------------------------------------
 
+sql<-glue("DROP TABLE mlee.{table_name}")
+
 tryCatch(
-  DBI::dbExecute(con, glue::glue("DROP TABLE mlee.{table_name}")),
+  DBI::dbExecute(con, sql),
   error = function(e) message("DROP TABLE failed (table may not exist): ", e$message)
 )
 
@@ -111,15 +113,15 @@ tryCatch(
 # dbWriteTable(..., overwrite=TRUE) call.
 # ------------------------------------------------------------------------------
 
-create_sql <- glue::glue("
-  CREATE TABLE mlee.{table_name} (
-    affiliate_id           NUMBER(8),
-    {entity_col}           VARCHAR2(8 CHAR),
-    small_business         NUMBER(1),
-    permit                 NUMBER(6),
-    value_permit           FLOAT,
-    value_permit_forhire   FLOAT,
-    year                   NUMBER(4)
+create_sql <- glue("
+  CREATE TABLE MLEE.{table_name} (
+    AFFILIATE_ID           NUMBER(8),
+    {entity_upper}         VARCHAR2(8 CHAR),
+    SMALL_BUSINESS         NUMBER(1),
+    PERMIT                 NUMBER(6),
+    VALUE_PERMIT           FLOAT,
+    VALUE_PERMIT_FORHIRE   FLOAT,
+    PERMIT_YEAR             NUMBER(4)
   )
 ")
 
@@ -130,11 +132,13 @@ DBI::dbExecute(con, create_sql)
 # Stata: odbc insert ... table("mlee.RFA${next_year}")
 # ------------------------------------------------------------------------------
 
+tablename<- glue("{table_name}")
+
 DBI::dbWriteTable(
   con,
-  DBI::Id(schema = "mlee", table = table_name),
-  df_push,
-  append = TRUE   # table already created above; append rows
+  name   =glue("{tablename}"),
+  value  = df_push,
+  append = TRUE
 )
 
 message("Inserted ", nrow(df_push), " rows into mlee.", table_name)
@@ -147,7 +151,7 @@ message("Inserted ", nrow(df_push), " rows into mlee.", table_name)
 
 grant_sql <- glue::glue("
   GRANT SELECT ON mlee.{table_name}
-  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER, GARFO_NESFC
+  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER
 ")
 
 DBI::dbExecute(con, grant_sql)
@@ -158,3 +162,4 @@ message("Oracle push complete: mlee.", table_name)
 
 # NOTE: The commented-out GARFO JDBC block (GRANT to BGALUARDI) is omitted.
 # No CREATE TABLE privileges exist on the GARFO server per original comment.
+
