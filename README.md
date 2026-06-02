@@ -8,7 +8,11 @@ Please see the [project template repository](https://github.com/NEFSC/READ-SSB-L
 
 Please help make this a valuable up-to-date resource.  Look [here](https://github.com/NEFSC/READ-SSB-Lee-WorkingEfficiently), if you'd like to contribute. 
 
+# How to run
 
+The file ``R_code/wrapper_extraction.R`` will extract and process data. There is sample code to push to oracle.
+
+Stata code is in the repository, but no longer maintained after the 2026 data release.
 
 # Distribution
 Min-Yang has a email distribution list
