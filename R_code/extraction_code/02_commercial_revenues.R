@@ -20,15 +20,10 @@
 #     Columns: permit, year, value_permit_commercial, value_NNNNNN per ITIS TSN
 #
 # Oracle Connections Required:
-#   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
-#              dbname = <the tns to the production oracle database>)
-#
-# Globals → R Config:
-#   - $firstyr     → firstyr       : first year of 5-year window (set in wrapper)
-#   - $yr_select   → yr_select     : last year of window
-#   - $my_datadir  → my_datadir    : data folder path
-#   - $vintage_string → vintage_string
+#   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
+#   drv is defined in the wrapper
 #
 # Conversion Notes:
 #   - Administrative dummy permit codes excluded: 190998, 290998, 390998, 490998, 000000.

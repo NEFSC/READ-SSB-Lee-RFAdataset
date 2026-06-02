@@ -22,8 +22,10 @@
 #              value_permit, value_permit_forhire, year
 #
 # ODBC Connections Required:
-#   - DSN: nova  (was $mynova_conn for DDL, $myNEFSC_USERS_conn for INSERT in Stata)
-#   Both pointed to the same Oracle server. In R/DBI, one connection handles all operations.
+#   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
+#   drv is defined in the wrapper
 #
 # Globals → R Config:
 #   - $my_datadir    → my_datadir
@@ -148,13 +150,12 @@ message("Inserted ", nrow(df_push), " rows into mlee.", table_name)
 
 # ------------------------------------------------------------------------------
 # GRANT SELECT to colleagues
-# Stata: odbc exec("GRANT SELECT on mlee.RFA${next_year} to CDEMAREST, ...")
 # HARD-CODED: grant recipients (CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER, GARFO_NESFC)
 # ------------------------------------------------------------------------------
 
 grant_sql <- glue::glue("
   GRANT SELECT ON mlee.{table_name}
-  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER,GARFO_NESFC
+  TO CDEMAREST, GARDINI, JDIDDEN, NPRADHAN, RMURPHY, SWERNER, GARFO_NESFC
 ")
 
 DBI::dbExecute(con, grant_sql)

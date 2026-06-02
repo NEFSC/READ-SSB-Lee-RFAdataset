@@ -19,9 +19,9 @@
 #
 # Oracle Connections Required:
 #   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#   Downstream code assumes that you have this in your environment, likely produced by your .Rprofile
-#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
-#              dbname = <the tns to the production oracle database>)
+#   Downstream code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
 
 
 # Globals → R Config:
@@ -30,8 +30,6 @@
 # Conversion Notes:
 #   - The original wrapper did not call data_joins.do or 02_push_to_oracle.do;
 #   - this R version DOES call data_joins, but not the push to oracle.
-#   - The commented-out `erase` block (intermediate file cleanup) is omitted;
-#     I prefer to keep intermediates for debugging.
 #   - firstyr is set HERE  scripts 02 and 03
 #     depend on it and cannot be run independently without it.
 #
@@ -73,6 +71,13 @@ source(here("R_code", "extraction_code", "03_for_hire_revenues.R"))
 message("Step 1d: Permit portfolio snapshot")
 source(here("R_code", "extraction_code", "04_permit_portfolio.R"))
 
-message("=== Extraction complete. Run data_joins.R next (manual step). ===")
+message("=== Extraction complete. Run data_joins.R next. ===")
 
 source(here("R_code", "processing_code", "data_joins.R"))
+
+
+
+# Not run.
+# This is commented out because it's a little tricky to set up.
+#source(here("R_code", "processing_code", "02_push_to_oracle.R"))
+

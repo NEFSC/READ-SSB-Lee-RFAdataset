@@ -21,9 +21,10 @@
 #     NOTE: the ppp prefix is stripped in data_joins.R (equivalent to `renvars ppp*, predrop(3)`)
 #
 # Oracle Connections Required:
-#   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
-#              dbname = <the tns to the production oracle database>)
+#   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
+#   drv is defined in the wrapper
 #
 # Globals → R Config:
 #   - $permit_date_pull  → permit_date_pull : date string '06/01/YYYY' for SQL
@@ -40,9 +41,6 @@
 #     data_joins.R. This R script preserves the ppp prefix; stripping happens there.
 #   - `expand 5 + bysort permit: replace year=year-_n+1` → tidyr::crossing() creates
 #     a row for each combination of permit × year (firstyr:yr_select).
-#   - `tempfile perms` was declared but unused in the original (dead code); omitted.
-#   - `gen str6 plancat=plan+"_"+cat` assumes plan and cat are ≤3 chars each.
-#     If Oracle returns longer strings, the str6 in Stata would truncate silently.
 #     R concatenation uses full strings; add a REVIEW note if truncation is suspected.
 #   - `duplicates drop` after plancat creation removes any duplicate plan-cat rows
 #     per vp_num before pivoting.

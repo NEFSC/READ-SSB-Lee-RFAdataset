@@ -22,14 +22,10 @@
 #     Columns: affiliate_id, year, permit, person_id1...N
 #
 # Oracle Connections Required:
-#   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
-#              dbname = <the tns to the production oracle database>)
-# Globals → R Config:
-#   - $yr_select       → yr_select      : analysis year
-#   - $myNEFSC_USERS_conn → dsn_nefsc_users : ODBC DSN name
-#   - $my_datadir      → my_datadir     : data folder path
-#   - $vintage_string  → vintage_string : output filename suffix
+#   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
+#   drv is defined in the wrapper
 #
 # Conversion Notes:
 #   - affiliate_id values are arbitrary sequential integers assigned by

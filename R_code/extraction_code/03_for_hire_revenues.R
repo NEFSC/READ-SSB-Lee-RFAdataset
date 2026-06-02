@@ -19,9 +19,11 @@
 #   - rec_exp named vector (from _config.R)
 
 # Oracle Connections Required:
-#   - DSN: nefscdb_con, set up as an ROracle connection dbConnect() outside of this code
-#     nefscdb_con<-dbConnect(drv, username = <your id here>, password = <your pwd here>,
-#              dbname = <the tns to the production oracle database>)
+#   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
+#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
+#   where id, novapw, and tns_alias contains the relevant connection info.
+#   drv is defined in the wrapper
+#
 # Outputs:
 #   - data_folder/intermediate/recreational_<vintage>.Rds
 #     Columns: permit, year, anglers, value_permit_forhire
@@ -71,8 +73,6 @@ query <- glue("
     and extract(YEAR FROM DATE_SAIL) between {firstyr} and {yr_select}
   group by VESSEL_PERMIT_NUM, extract(YEAR FROM DATE_SAIL)
 ")
-
-# REVIEW: verify that {firstyr} and {yr_select} integer interpolation is correct
 
 df <- dbGetQuery(con, query)
 dbDisconnect(con)
