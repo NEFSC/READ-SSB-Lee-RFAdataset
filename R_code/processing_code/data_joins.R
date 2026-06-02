@@ -424,7 +424,6 @@ message("  affiliates_condensed_", vintage_string, ".Rds")
 message("  affiliates_", vintage_string, ".xlsx")
 message("  affiliates_condensed_", vintage_string, ".xlsx")
 message("NOTE: .sas7bdat and .Rdata formats (previously via Stat/Transfer) not produced.")
-message("      Use haven::write_sas() if SAS format is required.")
 
 if (this_month < 6) {
   message("Today is ", format(today, "%Y %m %d"),

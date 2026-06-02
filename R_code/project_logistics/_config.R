@@ -17,7 +17,7 @@
 # Outputs:
 #   - No files.
 #   - Defines all shared R variables used by extraction and processing scripts.
-#
+#   - sets up data folder paths
 # ODBC Connections Required:
 #  set oustide of this
 # Globals → R Config:
@@ -36,6 +36,13 @@
 # Note, you should eventually pull the data from CPI, instead of looking it up
 # every year from the website
 # ==============================================================================
+
+#Deal with paths
+intermediate_path <- here("data_folder", "intermediate")
+dir.create(intermediate_path, recursive = TRUE, showWarnings = FALSE)
+final_path <- here("data_folder", "final")
+dir.create(final_path, recursive = TRUE, showWarnings = FALSE)
+
 
 library(fs)
 library(lubridate)
