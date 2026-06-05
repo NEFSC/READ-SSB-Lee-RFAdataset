@@ -23,8 +23,9 @@
 #
 # Oracle Connections Required:
 #   Code assumes that you have executed this (perhaps in your .Rprofile startup script)
-#   nefscdb_con<- quote(dbConnect(drv, username = id, password = novapw, dbname = tns_alias))
-#   where id, novapw, and tns_alias contains the relevant connection info.
+#   nefscdb_con<- quote(dbConnect(drv, username = your_id, password = your_oracle_pw, dbname = tns_alias))
+#   where your_id, your_oracle_pw, and tns_alias are character strings containing your oracle user id,
+#   your oracle password, and the tns_name
 #   drv is defined in the wrapper
 #
 # Conversion Notes:
