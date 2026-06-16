@@ -402,17 +402,17 @@ saveRDS(df,           here("data_folder", "final",
 
 # Excel outputs (replicated from Stata export excel)
 
-writexl::write_xlsx(df_condensed,
+write_xlsx(df_condensed,
                     here("data_folder", "final",
                              glue("affiliates_condensed_{vintage_string}.xlsx")))
-writexl::write_xlsx(df,
+write_xlsx(df,
                     here("data_folder", "final",
                              glue("affiliates_{vintage_string}.xlsx")))
 
 
 # sas xpt file
 
-haven::write_xpt(df,
+write_xpt(df,
                     path=here("data_folder", "final",
                          glue("affiliates_{vintage_string}.xpt")))
 
@@ -422,6 +422,8 @@ message("Outputs saved to ", here("data_folder", "final"))
 message("  affiliates_", vintage_string, ".Rds (", nrow(df), " rows, ", ncol(df), " cols)")
 message("  affiliates_condensed_", vintage_string, ".Rds")
 message("  affiliates_", vintage_string, ".xlsx")
+message("  affiliates_", vintage_string, ".xpt")
+
 message("  affiliates_condensed_", vintage_string, ".xlsx")
 message("NOTE: .sas7bdat and .Rdata formats (previously via Stat/Transfer) not produced.")
 

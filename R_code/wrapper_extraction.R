@@ -38,7 +38,8 @@ library(here)
 library(tidyverse)
 library(ROracle)
 library(glue)
-
+library(haven)
+library(writexl)
 
 here::i_am("R_code/wrapper_extraction.R")
 source(here("R_code","project_logistics","_config.R"))
