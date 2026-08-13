@@ -19,7 +19,9 @@ In 2026, the dataset is produced by two parallel pipelines maintained in this re
 - **Stata pipeline** (`stata_code/`): the original implementation. Produces `.dta` and `.xlsx`; historically also `.sas7bdat` and `.Rdata` (via Stat/Transfer).
 - **R pipeline** (`R_code/`): a tidyverse port of the Stata pipeline. Produces `.Rds` natively. See `documentation/stata-to-R-porting-report.md` for cross-pipeline verification. We have tested the code with a verfication script and plan to discontinue stata at the end of the 2026 development cycle. We will use use ``haven`` to produce stata dta files.
 
-Both pipelines read the same Oracle source tables and produce equivalent outputs at the affiliate-permit-year level.
+Both pipelines read the same Oracle source tables and produce equivalent outputs at the affiliate-permit-year level. 
+
+The stata pipeline will be discontinued in 2027.
 
 
 # Data storage
